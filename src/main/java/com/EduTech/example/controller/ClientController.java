@@ -3,7 +3,10 @@ package com.EduTech.example.controller;
 import com.EduTech.example.model.Client;
 import com.EduTech.example.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.List;
 
@@ -29,6 +32,22 @@ public class ClientController {
         return clientService.getById(id);
     }
 
+    @GetMapping("/searchRut/{rut}")
+    public Client seachRutClient(@PathVariable String rut){
+        return clientService.getByRut(rut);
+    }
+
+    @GetMapping("/searchName/{name}")
+    public Client seachNameClient(@PathVariable String name){
+        Client cliente = clientService.getByName(name);
+        if(cliente != null){
+            return cliente;
+        }else{
+            throw new HttpStatusCodeException(HttpStatus.NOT_FOUND, "Cliente no encontrado") {
+            };
+        }
+    }
+
     @PutMapping("{id}")
     public Client updateClient(@PathVariable int id, @RequestBody Client client){
         return clientService.updateClient(client);
@@ -37,6 +56,21 @@ public class ClientController {
     @DeleteMapping("{id}")
     public String deleteClient(@PathVariable int id){
         return clientService.deleteClient(id);
+    }
+
+    @GetMapping("/total")
+    public int totalClient(){
+        return clientService.totalClient();
+    }
+
+    @GetMapping("/menor")
+    public Client youngClient(){
+        return clientService.youngerClient();
+    }
+
+    @GetMapping("mayor")
+    public Client olderClient(){
+        return clientService.olderClient();
     }
 
 }

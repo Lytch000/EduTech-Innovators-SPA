@@ -25,6 +25,14 @@ public class ClientService {
         return clientRepository.getById(id);
     }
 
+    public Client getByRut(String rut){
+        return clientRepository.getByRut(rut);
+    }
+
+    public Client getByName(String name){
+        return clientRepository.getbyName(name);
+    }
+
     public Client updateClient(Client client){
         return clientRepository.updateClient(client);
     }
@@ -32,5 +40,17 @@ public class ClientService {
     public String deleteClient(int id){
         clientRepository.deleteClient(id);
         return "Cliente eliminado correctamente";
+    }
+
+    public int totalClient(){
+        return clientRepository.getAllClient().size();
+    }
+
+    public Client youngerClient(){
+        return clientRepository.youngerClient();
+    }
+
+    public Client olderClient(){
+        return clientRepository.olderClient();
     }
 }
