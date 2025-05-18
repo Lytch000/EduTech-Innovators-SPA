@@ -1,7 +1,8 @@
-package com.EduTech.example.service;
+package com.EduTech.service;
 
-import com.EduTech.example.model.Client;
-import com.EduTech.example.repository.ClientRepository;
+import com.EduTech.dto.ClientDTO;
+import com.EduTech.model.Client;
+import com.EduTech.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,46 +12,16 @@ import java.util.List;
 public class ClientService {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientRepository clienteRepository;
 
-    public List<Client> getClients(){
-        return clientRepository.getAllClient();
+    public List<ClientDTO> listar(){
+
+        List<ClientDTO> clientDTO = clienteRepository.buscarTodos();
+        return clientDTO;
     }
 
-    public Client saveClient(Client client){
-        return clientRepository.saveClient(client);
+    public Client addNewClient(Client cliente){
+        return clienteRepository.save(cliente);
     }
 
-    public Client getById(int id){
-        return clientRepository.getById(id);
-    }
-
-    public Client getByRut(String rut){
-        return clientRepository.getByRut(rut);
-    }
-
-    public Client getByName(String name){
-        return clientRepository.getbyName(name);
-    }
-
-    public Client updateClient(Client client){
-        return clientRepository.updateClient(client);
-    }
-
-    public String deleteClient(int id){
-        clientRepository.deleteClient(id);
-        return "Cliente eliminado correctamente";
-    }
-
-    public int totalClient(){
-        return clientRepository.getAllClient().size();
-    }
-
-    public Client youngerClient(){
-        return clientRepository.youngerClient();
-    }
-
-    public Client olderClient(){
-        return clientRepository.olderClient();
-    }
 }
