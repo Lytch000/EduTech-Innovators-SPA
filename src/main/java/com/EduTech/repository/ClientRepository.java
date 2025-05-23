@@ -1,3 +1,7 @@
+/** Autor Juan Olguin
+ *
+ */
+
 package com.EduTech.repository;
 
 import com.EduTech.dto.ClientDTO;

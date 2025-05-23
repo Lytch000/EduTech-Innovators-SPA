@@ -1,3 +1,7 @@
+/** Autor Juan Olguin
+ *
+ */
+
 package com.EduTech.model;
 
 import lombok.AllArgsConstructor;
