@@ -1,3 +1,7 @@
+/** Autor Juan Olguin
+ *
+ */
+
 package com.EduTech.model;
 
 import lombok.AllArgsConstructor;
@@ -6,11 +10,11 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cliente")
+@Table(name = "usuario")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
