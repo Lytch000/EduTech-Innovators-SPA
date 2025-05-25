@@ -1,14 +1,18 @@
+//Victor garces
 package com.EduTech.dto.cursoDTO;
 
 import com.EduTech.model.Curso;
 import lombok.Data;
 
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class CursoDTO {
 
-    private long idCurso;
+    private Long idCurso;
     private String nombreCurso;
     private String descripcion;
     private String categoria;

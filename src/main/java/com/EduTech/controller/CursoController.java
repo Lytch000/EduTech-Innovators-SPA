@@ -1,3 +1,4 @@
+// Victor garces
 package com.EduTech.controller;
 
 import com.EduTech.dto.cursoDTO.CursoDTO;
@@ -11,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/cursos/")
+@RequestMapping("api/v1/cursos")
 public class CursoController {
 
     @Autowired
     private CursoService cursoService;
 
-    @GetMapping("/listar")
+    @GetMapping("")
     public ResponseEntity<List<CursoDTO>> listar(){
         List<CursoDTO> cursos = cursoService.listar();
         if (cursos.isEmpty()){
@@ -27,9 +28,35 @@ public class CursoController {
         return ResponseEntity.ok(cursos);
     }
 
-    @PostMapping("/creacion")
+    // Ingresamos curso nuevo
+    @PostMapping("")
     public Curso addNewCurso(@RequestBody Curso curso){
         return cursoService.addNewCurso(curso);
     }
 
+
+    //Actualizamos curso
+    @PutMapping("")
+    public ResponseEntity<String> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
+        if (cursoDTO.getIdCurso() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: ID del curso es obligatorio.");
+        }
+        try {
+            String mensaje = cursoService.actualizarCurso(cursoDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el curso: " + e.getMessage());
+        }
+    }
+
+
 }
+
+
+
+
+
+
+
+

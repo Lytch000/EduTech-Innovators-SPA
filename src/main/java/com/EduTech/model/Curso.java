@@ -1,3 +1,4 @@
+//Victor garces
 package com.EduTech.model;
 
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ public class Curso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idCurso;
+    private Long idCurso;
 
     @Column(nullable = false)
     private String nombreCurso;
