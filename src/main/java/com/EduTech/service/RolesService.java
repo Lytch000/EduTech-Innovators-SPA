@@ -3,6 +3,7 @@ package com.EduTech.service;
 import com.EduTech.dto.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.repository.RolesRepository;
+import com.EduTech.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,15 @@ public class RolesService {
     @Autowired
     private RolesRepository rolesRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     public List<RolesDTO> listar(){
+
         List<RolesDTO> rolesDTO = rolesRepository.buscarTodos();
+        rolesDTO.forEach( roles -> {
+            roles.setUsuarioList(usuarioRepository.findByIdUsuario(roles.getId()));
+        });
         return rolesDTO;
     }
 
@@ -40,5 +48,6 @@ public class RolesService {
         rolesRepository.save(nuevoRol);
         return "Rol actualizado correctamente";
     }
+
 
 }

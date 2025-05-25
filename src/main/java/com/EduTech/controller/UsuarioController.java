@@ -32,8 +32,9 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public Usuario addNewUsuario(@RequestBody Usuario usuario){
-        return usuarioService.addNewUsuario(usuario);
+    public ResponseEntity<?> addNewUser(@RequestBody UsuarioDTO usuarioDTO){
+        usuarioService.addNewUsuario(usuarioDTO);
+        return ResponseEntity.ok("Usuario creado");
     }
 
 }

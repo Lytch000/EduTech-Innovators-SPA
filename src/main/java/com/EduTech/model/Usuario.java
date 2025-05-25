@@ -35,4 +35,8 @@ public class Usuario {
     @Column(nullable = false)
     private int celular;
 
+    @ManyToOne
+    @JoinColumn(name = "id_rol_fk")
+    private Roles roles;
+
 }
