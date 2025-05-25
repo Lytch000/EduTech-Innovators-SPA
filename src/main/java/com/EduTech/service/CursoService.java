@@ -55,6 +55,18 @@ public class CursoService {
         return "Curso actualizado correctamente.";
     }
 
+    // Eliminación de curso
+        public String deleteCurso(Long idCurso){
+            if (!cursoRepository.existsById(idCurso)){
+                return  "No se encuentra curso especificado.";
+            } else {
+                cursoRepository.deleteById(idCurso);
+                return "Curso eliminado exitosamente.";
+            }
+        }
+
+
+
     }
 
 

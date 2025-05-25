@@ -50,6 +50,12 @@ public class CursoController {
         }
     }
 
+    // Eliminados curso por el ID registrado en base de datos
+    @DeleteMapping("/delete/{idCurso}")
+    public String deleteCurso(@PathVariable Long idCurso){
+        return  cursoService.deleteCurso(idCurso);
+    }
+
 
 }
 
