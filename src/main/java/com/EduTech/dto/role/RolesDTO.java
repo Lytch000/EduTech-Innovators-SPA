@@ -15,7 +15,7 @@ public class RolesDTO {
     private String nombre;
     private String descripcion;
     private Date fechaCreacion;
-    List<UserDto> userList = new ArrayList<>();
+    List<UserDto> userList = new ArrayList<>() ;
 
     public RolesDTO(Roles roles){
         this.id = roles.getId();;
