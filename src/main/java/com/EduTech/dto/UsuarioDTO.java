@@ -16,6 +16,10 @@ public class UsuarioDTO {
     private int edad;
     private String email;
     private int celular;
+    private Long id_rol_fk;
+
+    public UsuarioDTO() {
+    }
 
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
