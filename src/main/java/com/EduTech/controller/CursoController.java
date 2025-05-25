@@ -18,7 +18,7 @@ public class CursoController {
     @Autowired
     private CursoService cursoService;
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<List<CursoDTO>> listar(){
         List<CursoDTO> cursos = cursoService.listar();
         if (cursos.isEmpty()){
@@ -29,14 +29,14 @@ public class CursoController {
     }
 
     // Ingresamos curso nuevo
-    @PostMapping("")
+    @PostMapping()
     public Curso addNewCurso(@RequestBody Curso curso){
         return cursoService.addNewCurso(curso);
     }
 
 
     //Actualizamos curso
-    @PutMapping("")
+    @PutMapping()
     public ResponseEntity<String> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
         if (cursoDTO.getIdCurso() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: ID del curso es obligatorio.");
