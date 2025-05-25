@@ -1,9 +1,12 @@
 package com.EduTech.dto;
 
 import com.EduTech.model.Roles;
+import com.EduTech.model.Usuario;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class RolesDTO {
@@ -12,6 +15,7 @@ public class RolesDTO {
     private String nombre;
     private String descripcion;
     private Date fechaCreacion;
+    List<UsuarioDTO>usuarioList = new ArrayList<>() ;
 
     public RolesDTO(Roles roles){
         this.id = roles.getId();;

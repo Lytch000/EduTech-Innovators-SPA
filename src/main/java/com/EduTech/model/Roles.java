@@ -9,7 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -30,4 +32,7 @@ public class Roles {
 
     @Column(nullable = false)
     private Date fechaCreacion;
+
+    @OneToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    List<Usuario> usuarioList = new ArrayList<>();
 }
