@@ -4,39 +4,35 @@
 
 package com.EduTech.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "roles")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Usuario {
+public class Roles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 13, nullable = false)
-    private String rut;
-
     @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
-    private int edad;
+    private String descripcion;
 
     @Column(nullable = false)
-    private String email;
+    private Date fechaCreacion;
 
-    @Column(nullable = false)
-    private int celular;
-
-    @ManyToOne
-    @JoinColumn(name = "id_rol_fk")
-    private Roles roles;
-
+    @OneToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    List<Usuario> usuarioList = new ArrayList<>();
 }
