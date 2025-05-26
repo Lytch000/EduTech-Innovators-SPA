@@ -17,7 +17,7 @@ import java.util.List;
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
     @Query("Select distinct new com.EduTech.dto.cursoDTO.CursoDTO(c)" +
-            "from Curso c ")
+            "from Curso c")
     List<CursoDTO> buscarTodosLosCursos();
 
 
