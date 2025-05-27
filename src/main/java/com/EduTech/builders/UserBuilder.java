@@ -3,6 +3,16 @@ package com.EduTech.builders;
 import java.sql.Date;
 
 import com.EduTech.model.User;
+
+/**
+ * User builder class for creating User objects.
+ *
+ * @author Franco Carrasco
+ * @version 1.0
+ * 
+ * @apiNote This class provides a fluent interface for building User objects with various attributes such as first name, last name, RUT, email, phone number, birth date, and password.
+ * @apiNote This class is only used for Franco Carrasco's API endpoints (The rest of the equipment has nothing to do with this).
+ */
 public class UserBuilder {
     public UserBuilder setFirstName(String firstName) {
         this.firstName = firstName;

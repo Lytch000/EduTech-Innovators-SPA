@@ -25,6 +25,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 
+/**
+ * UserController is a REST controller that handles user-related operations.
+ * 
+ * @apiNote This controller provides endpoints for creating, updating, retrieving, and deleting users.
+ * 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {

@@ -12,9 +12,13 @@ import com.EduTech.dto.user.UpdateUserPasswordDto;
 import com.EduTech.dto.user.UserDto;
 import com.EduTech.model.User;
 import com.EduTech.repository.UserRepository;
-import com.EduTech.utils.ApiResponse;
-import com.EduTech.utils.ListApiResponse;
 
+/**
+ * UserService is a service class that provides methods for managing users in the application.
+ *
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Service
 public class UserService {
     public List<User> getUsers() {

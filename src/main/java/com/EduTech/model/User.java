@@ -12,6 +12,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * User is an entity class representing a user in the EduTech application.
+ * It contains fields for user information such as first name, last name, RUT, email, password, birth date, and phone number.
+ *
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Data
 @Entity
 @AllArgsConstructor
