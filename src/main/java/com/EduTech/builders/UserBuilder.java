@@ -2,6 +2,7 @@ package com.EduTech.builders;
 
 import java.sql.Date;
 
+import com.EduTech.model.Roles;
 import com.EduTech.model.User;
 
 /**
@@ -53,6 +54,11 @@ public class UserBuilder {
         return this;
     }
 
+    public UserBuilder setRoles(Roles roles) {
+        this.roles = roles;
+        return this;
+    }
+
     public User build() {
         return new User(firstName, lastName, rut, email, password, birthDate, phoneNumber);
     }
@@ -60,4 +66,5 @@ public class UserBuilder {
     private Long phoneNumber;
     private String firstName, lastName, rut, email, password;
     private Date birthDate;
+    private Roles roles;
 }

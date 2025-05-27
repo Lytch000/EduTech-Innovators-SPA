@@ -4,7 +4,6 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 /**
  * ListApiResponse is a specialized version of ApiResponse used to handle responses that return a list of data.
  *
