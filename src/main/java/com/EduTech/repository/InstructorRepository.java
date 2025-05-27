@@ -14,4 +14,6 @@ public interface InstructorRepository  extends JpaRepository<Instructor, Long> {
     @Query("Select distinct new com.EduTech.dto.instructorDTO.InstructorDTO(i)" +
             "from Instructor i")
     List<InstructorDTO> buscarTodosLosInstructores();
+
+
 }

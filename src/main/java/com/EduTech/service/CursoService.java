@@ -64,10 +64,15 @@ public class CursoService {
                 return "Curso eliminado exitosamente.";
             }
         }
-
-
-
+    // Retornara los cursos del instructor
+    public List<CursoDTO> listarCursosPorInstructor(Long idInstructor) {
+        List<Curso> cursos = cursoRepository.findByInstructor_IdInstructor(idInstructor);
+        return cursos.stream().map(CursoDTO::new).toList(); // Convierte a DTO
     }
+
+
+
+}
 
 
 

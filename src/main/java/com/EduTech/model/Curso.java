@@ -37,4 +37,7 @@ public class Curso {
     @Column(nullable = false)
     private Date fechaPublicacion;   //Creacion del curso
 
+    @ManyToOne
+    @JoinColumn(name = "idInstructor", nullable = true)
+    private Instructor instructor;
 }

@@ -1,6 +1,7 @@
 // Victor garces
 package com.EduTech.controller;
 
+import com.EduTech.dto.instructorDTO.InstructorAsignacionDTO;
 import com.EduTech.dto.instructorDTO.InstructorDTO;
 import com.EduTech.model.Instructor;
 import com.EduTech.service.InstructorService;
@@ -34,5 +35,22 @@ public class InstructorController {
     public Instructor addNewCurso(@RequestBody Instructor instructor){
         return instructorService.addNewInstructor(instructor);
     }
+
+    // Eliminamos instructor
+    @DeleteMapping("/delete/{idInstructor}")
+    public String deleteCurso(@PathVariable Long idInstructor){
+        return instructorService.deleteCurso(idInstructor);
+    }
+
+
+
+    // Asignacion de instructor a un curso
+    @PostMapping("/asignar")
+    public ResponseEntity<String> asignarInstructor(@RequestBody InstructorAsignacionDTO dto) {
+        String resultado = instructorService.asignarInstructor(dto);
+        return ResponseEntity.ok(resultado);
+    }
+
+
 
 }

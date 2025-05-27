@@ -2,15 +2,17 @@
 
 package com.EduTech.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "intructor")
+@Table(name = "instructor")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,4 +33,8 @@ public class Instructor {
 
     @Column(nullable = false)
     private Date fechaIncorporacion;
+
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Curso> cursos;
 }

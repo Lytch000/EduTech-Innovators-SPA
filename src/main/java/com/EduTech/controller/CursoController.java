@@ -56,6 +56,16 @@ public class CursoController {
         return  cursoService.deleteCurso(idCurso);
     }
 
+    // Esto me permitira mostrar la lista de cursos con el id que este asignado
+    @GetMapping("/instructor/{idInstructor}")
+    public ResponseEntity<List<CursoDTO>> listarCursosPorInstructor(@PathVariable Long idInstructor) {
+        List<CursoDTO> cursos = cursoService.listarCursosPorInstructor(idInstructor);
+        if (cursos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(cursos);
+        }
+        return ResponseEntity.ok(cursos);
+    }
+
 
 }
 
