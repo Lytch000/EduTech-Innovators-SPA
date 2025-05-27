@@ -1,6 +1,6 @@
 package com.EduTech.controller;
 
-import com.EduTech.dto.RolesDTO;
+import com.EduTech.dto.role.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.service.RolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class RolesController {
         return rolesService.addNewRol(rol);
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteRol(@PathVariable Long id){
         return rolesService.deleteRol(id);
     }

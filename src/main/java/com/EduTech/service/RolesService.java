@@ -1,9 +1,9 @@
 package com.EduTech.service;
 
-import com.EduTech.dto.RolesDTO;
+import com.EduTech.dto.role.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.repository.RolesRepository;
-import com.EduTech.repository.UsuarioRepository;
+import com.EduTech.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +16,13 @@ public class RolesService {
     private RolesRepository rolesRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository userRepository;
 
     public List<RolesDTO> listar(){
 
         List<RolesDTO> rolesDTO = rolesRepository.buscarTodos();
         rolesDTO.forEach( roles -> {
-            roles.setUsuarioList(usuarioRepository.findByIdUsuario(roles.getId()));
+            roles.setUserList(userRepository.findAllByRoleId(roles.getId()));
         });
         return rolesDTO;
     }

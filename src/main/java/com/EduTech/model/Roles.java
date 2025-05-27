@@ -34,5 +34,5 @@ public class Roles {
     private Date fechaCreacion;
 
     @OneToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    List<Usuario> usuarioList = new ArrayList<>();
+    List<User> usuarioList = new ArrayList<>();
 }

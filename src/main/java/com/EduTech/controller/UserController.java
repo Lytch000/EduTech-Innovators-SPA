@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.EduTech.dto.user.CreateUserDto;
 import com.EduTech.dto.user.UpdateUserDto;
 import com.EduTech.dto.user.UpdateUserPasswordDto;
+import com.EduTech.dto.user.UserResponseDto;
 import com.EduTech.model.User;
 import com.EduTech.service.UserService;
 import com.EduTech.utils.ApiResponse;
@@ -53,7 +54,7 @@ public class UserController {
     @PatchMapping("{id}")
     public ApiResponse updateUser(@PathVariable Long id, @RequestBody UpdateUserDto userFields) {
         try {
-            User entity = service.updateUser(id, userFields);
+            UserResponseDto entity = service.updateUser(id, userFields);
             
             return new ApiResponse<>(entity, 200);
         } catch (NoSuchElementException e) {

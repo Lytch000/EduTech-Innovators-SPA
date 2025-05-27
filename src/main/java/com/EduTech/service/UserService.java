@@ -10,12 +10,11 @@ import com.EduTech.dto.user.CreateUserDto;
 import com.EduTech.dto.user.UpdateUserDto;
 import com.EduTech.dto.user.UpdateUserPasswordDto;
 import com.EduTech.dto.user.UserDto;
+import com.EduTech.dto.user.UserResponseDto;
 import com.EduTech.model.User;
 import com.EduTech.repository.UserRepository;
 import com.EduTech.model.Roles;
 import com.EduTech.repository.RolesRepository;
-import com.EduTech.utils.ApiResponse;
-import com.EduTech.utils.ListApiResponse;
 
 /**
  * UserService is a service class that provides methods for managing users in the application.
@@ -32,7 +31,7 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto newUserDto) {
-        Roles role = rolesRepository.findById(newUserDto.getId_rol_fk())
+        Roles role = rolesRepository.findById(newUserDto.getRolId())
             .orElseThrow();
 
         User user = new UserBuilder()
@@ -49,11 +48,22 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User updateUser(Long id, UpdateUserDto userFields) {
+    public UserResponseDto updateUser(Long id, UpdateUserDto userFields) {
         User user = repository.findById(id).orElseThrow();
 
         String newEmail = userFields.getEmail();
         Long newPhoneNumber = userFields.getPhoneNumber();
+        Long newRoleId = userFields.getRoleId();
+
+        if (newRoleId != null) {
+            Roles role = rolesRepository.findById(newRoleId)
+                .orElseThrow();
+
+            if (role == null)
+                throw new IllegalArgumentException("Role with ID " + newRoleId + " does not exist.");
+            
+            user.setRoles(role);
+        }
 
         if (newEmail != null) {
             if (newEmail.isEmpty() || newEmail.isBlank())
@@ -78,7 +88,11 @@ public class UserService {
             user.setPhoneNumber(newPhoneNumber);
         }
 
-        return repository.save(user);
+        User updatedUser = repository.save(user);
+        
+        UserResponseDto responseDto = new UserResponseDto(updatedUser);
+
+        return responseDto;
     }
 
     public String changePassword(UpdateUserPasswordDto fields) {
