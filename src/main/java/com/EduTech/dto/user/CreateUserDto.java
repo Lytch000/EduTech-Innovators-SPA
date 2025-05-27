@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @Data
 public class CreateUserDto {
-    private Long phoneNumber;
+    private Long phoneNumber, id_rol_fk;
     private String firstName, lastName, rut, email, password;
     private Date birthDate;
 }

@@ -12,6 +12,10 @@ import com.EduTech.dto.user.UpdateUserPasswordDto;
 import com.EduTech.dto.user.UserDto;
 import com.EduTech.model.User;
 import com.EduTech.repository.UserRepository;
+import com.EduTech.model.Roles;
+import com.EduTech.repository.RolesRepository;
+import com.EduTech.utils.ApiResponse;
+import com.EduTech.utils.ListApiResponse;
 
 /**
  * UserService is a service class that provides methods for managing users in the application.
@@ -28,6 +32,9 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto newUserDto) {
+        Roles role = rolesRepository.findById(newUserDto.getId_rol_fk())
+            .orElseThrow();
+
         User user = new UserBuilder()
                 .setBirthDate(newUserDto.getBirthDate())
                 .setEmail(newUserDto.getEmail())
@@ -36,6 +43,7 @@ public class UserService {
                 .setPhoneNumber(newUserDto.getPhoneNumber())
                 .setRut(newUserDto.getRut())
                 .setPassword(newUserDto.getPassword())
+                .setRoles(role)
                 .build();
 
         return repository.save(user);
@@ -103,4 +111,7 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private RolesRepository rolesRepository;
 }

@@ -2,7 +2,6 @@ package com.EduTech.dto.user;
 
 import lombok.Data;
 
-
 /**
  * UpdateUserPasswordDto is a Data Transfer Object (DTO) used for updating user passwords in the system.
  *
