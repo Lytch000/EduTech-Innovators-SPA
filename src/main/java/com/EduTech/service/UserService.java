@@ -47,10 +47,6 @@ public class UserService {
         String newEmail = userFields.getEmail();
         Long newPhoneNumber = userFields.getPhoneNumber();
 
-        System.out.println("Updating user with ID: " + id);
-        System.out.println("New email: " + newEmail);
-        System.out.println("New phone number: " + newPhoneNumber);
-
         if (newEmail != null) {
             if (newEmail.isEmpty() || newEmail.isBlank())
                 throw new IllegalArgumentException("Email cannot be empty or blank");

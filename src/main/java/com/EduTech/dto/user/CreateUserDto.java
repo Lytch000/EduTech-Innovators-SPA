@@ -4,6 +4,13 @@ import java.sql.Date;
 
 import lombok.Data;
 
+
+/**
+ * CreateUserDto is a Data Transfer Object (DTO) used for creating new users in the system.
+ *
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Data
 public class CreateUserDto {
     private Long phoneNumber;

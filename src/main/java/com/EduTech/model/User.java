@@ -57,6 +57,6 @@ public class User {
     @Column(nullable = false)
     private Date birthDate;
 
-    @Column(unique = true, length = 13, nullable = true)
+    @Column(length = 12, nullable = true)
     private Long phoneNumber;
 }

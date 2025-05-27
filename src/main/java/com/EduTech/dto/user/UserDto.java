@@ -6,6 +6,13 @@ import com.EduTech.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * UserDto is a Data Transfer Object (DTO) used for transferring user data between layers in the application.
+ * It provides methods to convert between User and UserDto objects.
+ *
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Data
 @NoArgsConstructor
 public class UserDto {

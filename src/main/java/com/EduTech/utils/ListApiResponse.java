@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  * @author Franco Carrasco
  * @version 1.0
  * 
- * @apiNote This class is only used for Franco Carrasco's API endpoints (The rest of the equipment has nothing to do with this.).
+ * @apiNote This class is only used for Franco Carrasco's API endpoints (The rest of the equipment has nothing to do with this).
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
