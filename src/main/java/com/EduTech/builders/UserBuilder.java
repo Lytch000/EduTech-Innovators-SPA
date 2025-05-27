@@ -23,7 +23,6 @@ public class UserBuilder {
 
     public UserBuilder setLastName(String lastName) {
         this.lastName = lastName;
-
         return this;
     }
 
@@ -39,13 +38,11 @@ public class UserBuilder {
 
     public UserBuilder setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
-
         return this;
     }
 
     public UserBuilder setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
-
         return this;
     }
 
