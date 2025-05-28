@@ -1,7 +1,7 @@
 package com.EduTech.dto;
 
+import com.EduTech.dto.user.RespuestaUsuarioDto;
 import com.EduTech.model.Roles;
-import com.EduTech.model.Usuario;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class RolesDTO {
     private String nombre;
     private String descripcion;
     private Date fechaCreacion;
-    List<UsuarioDTO>usuarioList = new ArrayList<>() ;
+    List<RespuestaUsuarioDto>usuarioList = new ArrayList<>() ;
 
     public RolesDTO(Roles roles){
         this.id = roles.getId();;

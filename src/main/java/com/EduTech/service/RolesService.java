@@ -22,7 +22,7 @@ public class RolesService {
 
         List<RolesDTO> rolesDTO = rolesRepository.buscarTodos();
         rolesDTO.forEach( roles -> {
-            roles.setUsuarioList(usuarioRepository.findByIdUsuario(roles.getId()));
+            roles.setUsuarioList(usuarioRepository.findAllByIdRoles(roles.getId()));
         });
         return rolesDTO;
     }

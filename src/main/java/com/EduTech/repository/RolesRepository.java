@@ -1,7 +1,7 @@
 package com.EduTech.repository;
 
 import com.EduTech.dto.RolesDTO;
-import com.EduTech.dto.UsuarioDTO;
+import com.EduTech.dto.user.UsuarioDTO;
 import com.EduTech.model.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
