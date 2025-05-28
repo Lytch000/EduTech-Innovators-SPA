@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.EduTech.model.Usuario;
 
 import java.util.Date;
 
@@ -36,5 +37,9 @@ public class Curso {
 
     @Column(nullable = false)
     private Date fechaPublicacion;   //Creacion del curso
+
+    @ManyToOne
+    @JoinColumn(name = "id_profesor_fk")
+    private Usuario profesor;
 
 }

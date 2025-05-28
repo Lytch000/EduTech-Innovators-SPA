@@ -56,6 +56,27 @@ public class CursoController {
         return  cursoService.deleteCurso(idCurso);
     }
 
+    @PutMapping("/remover-profesor/{idCurso}")
+    public ResponseEntity<String> removerProfesor(@PathVariable Long idCurso) {
+        try {
+            String mensaje = cursoService.removerProfesorDeCurso(idCurso);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al remover el profesor: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/asignar-profesor/{idCurso}")
+    public ResponseEntity<String> asignarProfesor(@PathVariable Long idCurso) {
+        try {
+            String mensaje = cursoService.asignarProfesorDeCurso(idCurso);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al asignar el profesor: " + e.getMessage());
+        }
+    }
 
 }
 
