@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("api/v1/usuarios")
@@ -39,10 +42,18 @@ public class UsuarioController {
         return new ApiResponse<>(entity, 201);
     }
 
+    @GetMapping("{id}")
+    public ApiResponse<RespuestaUsuarioDto> getOneUser(@PathVariable Long id) {
+        RespuestaUsuarioDto entity = service.getOneUser(id);
+
+        return new ApiResponse<>(entity, 200);
+    }
+    
+
     @PatchMapping("{id}")
     public ApiResponse updateUser(@PathVariable Long id, @RequestBody ActualizarUsuarioDto userFields) {
         try {
-            UsuarioDTO entity = service.updateUser(id, userFields);
+            RespuestaUsuarioDto entity = service.updateUser(id, userFields);
 
             return new ApiResponse<>(entity, 200);
         } catch (NoSuchElementException e) {

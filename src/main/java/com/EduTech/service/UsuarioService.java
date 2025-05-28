@@ -52,7 +52,16 @@ public class UsuarioService {
         return new RespuestaUsuarioDto(savedUser);
     }
 
-    public UsuarioDTO updateUser(Long id, ActualizarUsuarioDto userFields) {
+    public RespuestaUsuarioDto getOneUser(Long id) {
+
+        System.out.println("id: " + id);
+
+        Usuario user = repository.findById(id).orElseThrow();
+
+        return new RespuestaUsuarioDto(user);
+    }
+
+    public RespuestaUsuarioDto updateUser(Long id, ActualizarUsuarioDto userFields) {
         Usuario user = repository.findById(id).orElseThrow();
 
         String newEmail = userFields.getEmail();
@@ -92,9 +101,9 @@ public class UsuarioService {
             user.setPhoneNumber(newPhoneNumber);
         }
 
-            Usuario updatedUser = repository.save(user);
+        Usuario updatedUser = repository.save(user);
 
-        UsuarioDTO responseDto = new UsuarioDTO(updatedUser);
+        RespuestaUsuarioDto responseDto = new RespuestaUsuarioDto(updatedUser);
 
         return responseDto;
     }
