@@ -28,5 +28,6 @@ public class UsuarioDTO {
         this.edad = usuario.getEdad();
         this.email = usuario.getEmail();
         this.celular = usuario.getCelular();
+        this.id_rol_fk = usuario.getRoles().getId();
     }
 }
