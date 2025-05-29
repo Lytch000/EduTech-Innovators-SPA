@@ -1,4 +1,4 @@
-package com.EduTech.example.EduTech;
+package com.EduTech;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
