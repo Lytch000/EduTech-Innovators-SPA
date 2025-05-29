@@ -17,6 +17,10 @@ import com.EduTech.dto.permissions.PermisoDto;
 import com.EduTech.dto.permissions.ActualizarPermisoDto;
 import com.EduTech.service.PermisoService;
 
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("api/v1/permisos")
 public class PermisoController {
