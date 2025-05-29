@@ -17,7 +17,7 @@ public class RolesController {
     @Autowired
     private RolesService rolesService;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<RolesDTO>> listar(){
         List<RolesDTO> roles = rolesService.listar();
         if(roles.isEmpty()){

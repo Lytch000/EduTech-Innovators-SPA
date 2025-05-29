@@ -142,7 +142,7 @@ public class UsuarioService {
     @Autowired
     private RolesRepository rolesRepository;
 
-    public UsuarioDTO loginUsuario(String email, String password) {
+    public UsuarioDTO login(String email, String password) {
         return repository.findByEmailAndPassword(email, password)
                 .map(UsuarioDTO::new)
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));

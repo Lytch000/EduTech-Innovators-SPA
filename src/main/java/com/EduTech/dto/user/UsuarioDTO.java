@@ -7,9 +7,11 @@ package com.EduTech.dto.user;
 import java.util.Date;
 
 import com.EduTech.model.Usuario;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties({"estudiantes", "profesor"})
 public class UsuarioDTO {
 
     public UsuarioDTO(Usuario user) {
@@ -38,4 +40,16 @@ public class UsuarioDTO {
     private Long id, phoneNumber, id_rol_fk;
     private String firstName, lastName, rut, password, email;
     private Date birthDate;
+
+    public UsuarioDTO(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
+
+    public UsuarioDTO (Long id, String firstName, String lastName, String email){
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 }
