@@ -37,4 +37,11 @@ public class UsuarioDTO {
         this.email = email;
         this.password = password;
     }
+
+    public UsuarioDTO (Long id, String nombre, String email){
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+    }
+
 }

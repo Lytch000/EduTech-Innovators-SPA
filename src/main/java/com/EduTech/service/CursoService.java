@@ -136,6 +136,37 @@ public class CursoService {
     }
 
 
+    //Autor Juan Olguin
+    public String inscribirEstudianteACurso(Long idCurso, Long idUsuario) {
+        Curso curso = cursoRepository.findById(idCurso)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!usuario.getRoles().getNombre().equalsIgnoreCase("CLIENTE")) {
+            throw new RuntimeException("Solo los usuarios con rol CLIENTE pueden inscribirse en cursos.");
+        }
+
+        curso.getEstudiantes().add(usuario);
+        cursoRepository.save(curso);
+
+        return "Estudiante inscrito correctamente al curso.";
+    }
+
+    public String removerEstudiantedeCurso(Long idCurso, Long idUsuario){
+        Curso curso = cursoRepository.findById(idCurso)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        curso.getEstudiantes().remove(usuario);
+        cursoRepository.save(curso);
+
+        return "Estudiante removido correctamente";
+    }
+
 
 }
 

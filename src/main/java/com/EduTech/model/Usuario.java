@@ -4,16 +4,21 @@
 
 package com.EduTech.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"estudiantes", "profesor"})
 public class Usuario {
 
     @Id
@@ -41,5 +46,10 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "id_rol_fk")
     private Roles roles;
+
+    @ManyToMany(mappedBy = "estudiantes")
+    @JsonIgnoreProperties({"estudiantes", "profesor"})
+    private List<Curso> cursosInscritos = new ArrayList<>();
+
 
 }

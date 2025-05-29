@@ -1,13 +1,16 @@
 //Victor garces
 package com.EduTech.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.EduTech.model.Usuario;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "curso")
@@ -40,6 +43,17 @@ public class Curso {
 
     @ManyToOne
     @JoinColumn(name = "id_profesor_fk")
+    @JsonIgnoreProperties({"estudiantes", "profesor"})
     private Usuario profesor;
+
+    //Autor Juan Olguin
+    @ManyToMany
+    @JoinTable(
+            name = "usuario_curso",
+            joinColumns = @JoinColumn(name = "curso_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    @JsonIgnoreProperties({"estudiantes", "profesor"})
+    private List<Usuario> estudiantes = new ArrayList<>();
 
 }

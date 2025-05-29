@@ -48,6 +48,7 @@ public class UsuarioService {
 
     }
 
+    //Autor Juan Olguin
     public UsuarioDTO loginUsuario(String email, String password) {
         return usuarioRepository.findByEmailAndPassword(email, password)
                 .map(UsuarioDTO::new)

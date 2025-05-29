@@ -78,6 +78,29 @@ public class CursoController {
         }
     }
 
+    //Autor Juan Olguin
+    @PutMapping("/inscribirEstudiante/{idCurso}/{idUsuario}")
+    public ResponseEntity<String> inscribirEstudiante(@PathVariable Long idCurso, @PathVariable Long idUsuario) {
+        try {
+            String mensaje = cursoService.inscribirEstudianteACurso(idCurso, idUsuario);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    //Autor Juan Olguin
+    @PutMapping("/removerEstudiante/{idCurso}/{idUsuario}")
+    public ResponseEntity<String> removerEstudiante(@PathVariable Long idCurso, @PathVariable Long idUsuario){
+        try {
+            String mensaje = cursoService.removerEstudiantedeCurso(idCurso, idUsuario);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
 }
 
 
