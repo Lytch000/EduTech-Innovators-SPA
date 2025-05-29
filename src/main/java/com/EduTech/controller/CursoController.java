@@ -35,20 +35,7 @@ public class CursoController {
     }
 
 
-    //Actualizamos curso
-    @PutMapping()
-    public ResponseEntity<String> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
-        if (cursoDTO.getIdCurso() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: ID del curso es obligatorio.");
-        }
-        try {
-            String mensaje = cursoService.actualizarCurso(cursoDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(mensaje);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar el curso: " + e.getMessage());
-        }
-    }
+
 
     // Eliminados curso por el ID registrado en base de datos
     @DeleteMapping("/delete/{idCurso}")
@@ -56,6 +43,7 @@ public class CursoController {
         return  cursoService.deleteCurso(idCurso);
     }
 
+    //Eliminamos profesor del curso ----
     @PutMapping("/remover-profesor/{idCurso}")
     public ResponseEntity<String> removerProfesor(@PathVariable Long idCurso) {
         try {
@@ -67,6 +55,7 @@ public class CursoController {
         }
     }
 
+    //Asignamos profesor ---
     @PutMapping("/asignar-profesor/{idCurso}")
     public ResponseEntity<String> asignarProfesor(@PathVariable Long idCurso) {
         try {
@@ -75,6 +64,21 @@ public class CursoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al asignar el profesor: " + e.getMessage());
+        }
+    }
+
+    //Actualizamos curso --
+    @PutMapping()
+    public ResponseEntity<String> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
+        if (cursoDTO.getIdCurso() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: ID del curso es obligatorio.");
+        }
+        try {
+            String mensaje = cursoService.actualizarCurso(cursoDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el curso: " + e.getMessage());
         }
     }
 
