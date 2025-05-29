@@ -6,6 +6,10 @@ import com.EduTech.model.Permiso;
 
 import lombok.Data;
 
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Data
 public class PermisoDto {
 

@@ -19,6 +19,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Data
 @Entity
 @Table(name = "permisos")

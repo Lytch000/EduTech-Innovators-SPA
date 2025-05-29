@@ -8,6 +8,10 @@ import com.EduTech.dto.roles.RespuestaRolDto;
 import com.EduTech.model.Permiso;
 import lombok.Data;
 
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Data
 public class PermisoConRolDto {
 
