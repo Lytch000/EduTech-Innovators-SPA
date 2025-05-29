@@ -1,6 +1,6 @@
 package com.EduTech.controller;
 
-import com.EduTech.dto.RolesDTO;
+import com.EduTech.dto.roles.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.service.RolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ public class RolesController {
     @GetMapping()
     public ResponseEntity<List<RolesDTO>> listar(){
         List<RolesDTO> roles = rolesService.listar();
+        
         if(roles.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(roles);
         }

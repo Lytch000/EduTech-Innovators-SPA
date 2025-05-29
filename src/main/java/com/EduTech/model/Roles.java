@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -36,6 +38,9 @@ public class Roles {
 
     @OneToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Usuario> usuarioList = new ArrayList<>();
+    private List<Usuario> usuarioList = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    private Set<Permiso> permisos = new HashSet<>();
 }
