@@ -2,7 +2,7 @@
 Autor Juan Olguin
  */
 
-package com.EduTech.dto;
+package com.EduTech.dto.roles;
 
 import com.EduTech.dto.user.RespuestaUsuarioDto;
 import com.EduTech.model.Roles;

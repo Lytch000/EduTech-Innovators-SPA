@@ -1,6 +1,6 @@
 package com.EduTech.service;
 
-import com.EduTech.dto.RolesDTO;
+import com.EduTech.dto.roles.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.repository.RolesRepository;
 import com.EduTech.repository.UsuarioRepository;
