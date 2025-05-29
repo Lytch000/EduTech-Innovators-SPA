@@ -31,4 +31,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             " where u.roles.id = :idRoles ")
     List<RespuestaUsuarioDto> findAllByIdRoles(@Param("idRoles") Long idRoles);
 
+
+    Optional<Usuario> findByEmailAndPassword(String email, String password);
+
 }
