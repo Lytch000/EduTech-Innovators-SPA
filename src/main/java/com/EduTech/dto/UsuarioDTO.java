@@ -16,6 +16,7 @@ public class UsuarioDTO {
     private int edad;
     private String email;
     private int celular;
+    private String password;
     private Long id_rol_fk;
 
     public UsuarioDTO() {
@@ -28,5 +29,12 @@ public class UsuarioDTO {
         this.edad = usuario.getEdad();
         this.email = usuario.getEmail();
         this.celular = usuario.getCelular();
+        this.password = usuario.getPassword();
+        this.id_rol_fk = usuario.getRoles().getId();
+    }
+
+    public UsuarioDTO(String email, String password){
+        this.email = email;
+        this.password = password;
     }
 }

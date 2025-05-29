@@ -4,6 +4,7 @@
 
 package com.EduTech.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,5 +35,7 @@ public class Roles {
     private Date fechaCreacion;
 
     @OneToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @JsonIgnore
     List<Usuario> usuarioList = new ArrayList<>();
+
 }

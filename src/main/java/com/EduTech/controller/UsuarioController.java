@@ -4,6 +4,7 @@
 
 package com.EduTech.controller;
 
+import com.EduTech.dto.LoginRequest;
 import com.EduTech.dto.UsuarioDTO;
 import com.EduTech.model.Usuario;
 import com.EduTech.service.UsuarioService;
@@ -35,6 +36,16 @@ public class UsuarioController {
     public ResponseEntity<?> addNewUser(@RequestBody UsuarioDTO usuarioDTO){
         usuarioService.addNewUsuario(usuarioDTO);
         return ResponseEntity.ok("Usuario creado");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            UsuarioDTO usuario = usuarioService.loginUsuario(request.getEmail(), request.getPassword());
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+        }
     }
 
 }
