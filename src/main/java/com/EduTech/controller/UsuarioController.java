@@ -41,13 +41,13 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(entity);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<RespuestaUsuarioDto> getOneUser(@PathVariable Long id) {
         RespuestaUsuarioDto entity = service.getOneUser(id);
         return ResponseEntity.ok(entity);
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/id/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody ActualizarUsuarioDto userFields) {
         try {
             RespuestaUsuarioDto entity = service.updateUser(id, userFields);
@@ -85,10 +85,11 @@ public class UsuarioController {
         }
     }
 
+    //Autor Juan Olguin
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
-            UsuarioDTO usuario = service.loginUsuario(request.getEmail(), request.getPassword());
+            UsuarioDTO usuario = service.login(request.getEmail(), request.getPassword());
             return ResponseEntity.ok(usuario);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
