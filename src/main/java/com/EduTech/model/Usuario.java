@@ -1,7 +1,3 @@
-/** Autor Juan Olguin
- *
- */
-
 package com.EduTech.model;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +8,10 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Entity
 @Table(name = "usuario")
 @Data

@@ -6,7 +6,6 @@ package com.EduTech.dto.user;
 
 import java.util.Date;
 
-import com.EduTech.builders.BuilderUsuario;
 import com.EduTech.model.Usuario;
 import lombok.Data;
 
@@ -25,16 +24,14 @@ public class UsuarioDTO {
     }
 
     public Usuario toUser() {
-        Usuario user = new BuilderUsuario()
-            .email(email)
-            .firstName(firstName)
-            .lastName(lastName)
-            .rut(rut)
-            .password(password)
-            .phoneNumber(phoneNumber)
-            .birthDate(birthDate)
-            .build();
-
+        Usuario user = new Usuario();
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRut(rut);
+        user.setPassword(password);
+        user.setPhoneNumber(phoneNumber);
+        user.setBirthDate(birthDate);
         return user;
     }
 

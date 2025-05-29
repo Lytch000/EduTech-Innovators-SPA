@@ -1,7 +1,3 @@
-/** Autor Juan Olguin
- *
- */
-
 package com.EduTech.repository;
 
 import com.EduTech.dto.user.RespuestaUsuarioDto;
@@ -15,6 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT NEW com.EduTech.dto.user.UsuarioDTO(u) FROM Usuario u WHERE u.email = :email")

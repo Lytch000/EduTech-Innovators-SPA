@@ -1,7 +1,3 @@
-/** Autor Juan Olguin
- *
- */
-
 package com.EduTech.service;
 
 import com.EduTech.dto.user.CrearUsuarioDto;
@@ -13,12 +9,16 @@ import com.EduTech.model.Roles;
 import com.EduTech.model.Usuario;
 import com.EduTech.repository.RolesRepository;
 import com.EduTech.repository.UsuarioRepository;
-import com.EduTech.builders.BuilderUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+/** 
+ * @author Franco Carrasco
+ * @version 1.0
+ */
 
 @Service
 public class UsuarioService {
@@ -36,16 +36,16 @@ public class UsuarioService {
         Roles role = rolesRepository.findById(newUserDto.getRolId())
             .orElseThrow();
 
-        Usuario user = new BuilderUsuario()
-                .birthDate(newUserDto.getBirthDate())
-                .email(newUserDto.getEmail())
-                .firstName(newUserDto.getFirstName())
-                .lastName(newUserDto.getLastName())
-                .phoneNumber(newUserDto.getPhoneNumber())
-                .rut(newUserDto.getRut())
-                .password(newUserDto.getPassword())
-                .roles(role)
-                .build();
+        Usuario user = new Usuario();
+
+        user.setBirthDate(newUserDto.getBirthDate());
+        user.setEmail(newUserDto.getEmail());
+        user.setFirstName(newUserDto.getFirstName());
+        user.setLastName(newUserDto.getLastName());
+        user.setPhoneNumber(newUserDto.getPhoneNumber());
+        user.setRut(newUserDto.getRut());
+        user.setPassword(newUserDto.getPassword());
+        user.setRoles(role);
         
         Usuario savedUser = repository.save(user);
 
