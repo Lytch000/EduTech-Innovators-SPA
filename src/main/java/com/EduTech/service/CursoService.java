@@ -46,7 +46,7 @@ public class CursoService {
         return cursoRepository.save(curso);
     }
 
-    //Actualizamos curso
+    //Actualizamos curso --
     public String actualizarCurso(CursoDTO cursoDTO) {
         if (cursoDTO.getIdCurso() == null) {
             return "Error: El ID del curso es obligatorio.";
@@ -82,6 +82,7 @@ public class CursoService {
         }
     }
 
+    //Eliminamos profesor del curso ----
     public String removerProfesorDeCurso(Long idCurso) {
         Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
         if (!cursoOpt.isPresent()) {
@@ -95,6 +96,7 @@ public class CursoService {
         return "Profesor removido del curso.";
     }
 
+    // Asignamos profesor ---
     public String asignarProfesorDeCurso(Long idCurso) {
         Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
         if (!cursoOpt.isPresent()) {
@@ -108,32 +110,7 @@ public class CursoService {
         return "Profesor asignado al curso.";
     }
 
-    //Probando
 
-    public String asignarProfesorACurso(Long idCurso, Long idProfesor) {
-        Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
-        if (!cursoOpt.isPresent()) {
-            return "Curso no encontrado.";
-        }
-
-        Optional<Usuario> profesorOpt = usuarioRepository.findById(idProfesor);
-        if (!profesorOpt.isPresent()) {
-            return "Profesor no encontrado.";
-        }
-
-        Usuario profesor = profesorOpt.get();
-
-        // Validar que tenga el rol de "Profesor"
-        if (!profesor.getRoles().getNombre().equalsIgnoreCase("Profesor")) {
-            return "El usuario no tiene el rol de Profesor.";
-        }
-
-        Curso curso = cursoOpt.get();
-        curso.setProfesor(profesor);
-        cursoRepository.save(curso);
-
-        return "Profesor asignado al curso correctamente.";
-    }
 
     //Autor Juan Olguin
     public String inscribirEstudianteACurso(Long idCurso, Long idUsuario) {

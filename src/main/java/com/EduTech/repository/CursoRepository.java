@@ -20,6 +20,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
             "from Curso c ")
     List<CursoDTO> buscarTodosLosCursos();
 
+    List<Curso> findByProfesorId(Long idProfesor);
 
 
 }

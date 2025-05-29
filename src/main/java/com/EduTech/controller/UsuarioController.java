@@ -1,7 +1,9 @@
 package com.EduTech.controller;
 
-import com.EduTech.dto.user.LoginRequest;
-import com.EduTech.dto.user.UsuarioDTO;
+import com.EduTech.dto.UsuarioDTO;
+import com.EduTech.dto.cursoDTO.CursoPatchDTO;
+import com.EduTech.dto.cursoDTO.ProfesorDetalleCursoDTO;
+import com.EduTech.model.Usuario;
 import com.EduTech.service.UsuarioService;
 import com.EduTech.dto.user.CrearUsuarioDto;
 import com.EduTech.dto.user.RespuestaUsuarioDto;
@@ -95,5 +97,32 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
     }
+
+    // es el cual me permitira ingresar el id del profesor y me listara los cursos asignados previamente
+    @GetMapping("/profesor/detalle/{id}")
+    public ResponseEntity<?> obtenerDetalleProfesor(@PathVariable Long id) {
+        try {
+            ProfesorDetalleCursoDTO detalle = usuarioService.obtenerDetalleProfesorConCursos(id);
+            return ResponseEntity.ok(detalle);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // me permitira actualizar (Conjunto de ids)
+    @PutMapping("/cursos/{idProfesor}")
+    public ResponseEntity<String> reemplazarCursos(@PathVariable Long idProfesor, @RequestBody List<Long> idsCursos) {
+        usuarioService.reemplazarCursosDeProfesor(idProfesor, idsCursos);
+        return ResponseEntity.ok("Cursos actualizados");
+    }
+
+
+    @PatchMapping("/cursos/{idProfesor}")
+    public ResponseEntity<String> modificarCursos(@PathVariable Long idProfesor,
+                                                  @RequestBody CursoPatchDTO dto) {
+        usuarioService.modificarCursosDeProfesor(idProfesor, dto);
+        return ResponseEntity.ok("Cursos modificados correctamente");
+    }
+
 
 }
