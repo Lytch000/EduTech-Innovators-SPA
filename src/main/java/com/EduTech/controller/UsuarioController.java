@@ -1,9 +1,9 @@
 package com.EduTech.controller;
 
-import com.EduTech.dto.UsuarioDTO;
+import com.EduTech.dto.user.UsuarioDTO;
 import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.dto.cursoDTO.ProfesorDetalleCursoDTO;
-import com.EduTech.model.Usuario;
+import com.EduTech.dto.user.LoginRequest;
 import com.EduTech.service.UsuarioService;
 import com.EduTech.dto.user.CrearUsuarioDto;
 import com.EduTech.dto.user.RespuestaUsuarioDto;
@@ -102,7 +102,7 @@ public class UsuarioController {
     @GetMapping("/profesor/detalle/{id}")
     public ResponseEntity<?> obtenerDetalleProfesor(@PathVariable Long id) {
         try {
-            ProfesorDetalleCursoDTO detalle = usuarioService.obtenerDetalleProfesorConCursos(id);
+            ProfesorDetalleCursoDTO detalle = service.obtenerDetalleProfesorConCursos(id);
             return ResponseEntity.ok(detalle);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -112,7 +112,7 @@ public class UsuarioController {
     // me permitira actualizar (Conjunto de ids)
     @PutMapping("/cursos/{idProfesor}")
     public ResponseEntity<String> reemplazarCursos(@PathVariable Long idProfesor, @RequestBody List<Long> idsCursos) {
-        usuarioService.reemplazarCursosDeProfesor(idProfesor, idsCursos);
+        service.reemplazarCursosDeProfesor(idProfesor, idsCursos);
         return ResponseEntity.ok("Cursos actualizados");
     }
 
@@ -120,7 +120,7 @@ public class UsuarioController {
     @PatchMapping("/cursos/{idProfesor}")
     public ResponseEntity<String> modificarCursos(@PathVariable Long idProfesor,
                                                   @RequestBody CursoPatchDTO dto) {
-        usuarioService.modificarCursosDeProfesor(idProfesor, dto);
+        service.modificarCursosDeProfesor(idProfesor, dto);
         return ResponseEntity.ok("Cursos modificados correctamente");
     }
 

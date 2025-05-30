@@ -1,15 +1,15 @@
 package com.EduTech.service;
 
-import com.EduTech.dto.UsuarioDTO;
 import com.EduTech.dto.cursoDTO.CursoDTO;
 import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.dto.cursoDTO.ProfesorDetalleCursoDTO;
+import com.EduTech.dto.user.*;
 import com.EduTech.model.Curso;
 import com.EduTech.model.Roles;
 import com.EduTech.model.Usuario;
-import com.EduTech.repository.CursoRepository;
-import com.EduTech.repository.RolesRepository;
 import com.EduTech.repository.UsuarioRepository;
+import com.EduTech.repository.RolesRepository;
+import com.EduTech.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -146,34 +146,10 @@ public class UsuarioService {
     @Autowired
     private CursoRepository cursoRepository;
 
-    public List<UsuarioDTO> listar(){
-
-        List<UsuarioDTO> usuarioDTO = usuarioRepository.buscarTodos();
-        return usuarioDTO;
-    }
-
-    public String addNewUsuario(UsuarioDTO dto){
-
-        Roles rol = rolesRepository.findById(dto.getId_rol_fk())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-
-        Usuario usuario = new Usuario();
-        usuario.setRut(dto.getRut());
-        usuario.setNombre(dto.getNombre());
-        usuario.setEdad(dto.getEdad());
-        usuario.setEmail(dto.getEmail());
-        usuario.setCelular(dto.getCelular());
-        usuario.setRoles(rol);
-
-        usuarioRepository.save(usuario);
-
-        return "Usuario registrado correctamente";
-
-    }
 
     // Obtendre el profesor con los detalles del curso que tenga asignado
     public ProfesorDetalleCursoDTO obtenerDetalleProfesorConCursos(Long idProfesor) {
-        Usuario profesor = usuarioRepository.findById(idProfesor)
+        Usuario profesor = repository.findById(idProfesor)
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
 
         if (!profesor.getRoles().getNombre().equalsIgnoreCase("Profesor")) {
@@ -188,7 +164,7 @@ public class UsuarioService {
 
         return new ProfesorDetalleCursoDTO(
                 profesor.getId(),
-                profesor.getNombre(),
+                profesor.getFirstName(),
                 profesor.getEmail(),
                 profesor.getRut(),
                 nombresCursos
@@ -197,7 +173,7 @@ public class UsuarioService {
 
     // Esto me permitira actualizar
     public void reemplazarCursosDeProfesor(Long idProfesor, List<Long> idsCursos) {
-        Usuario profesor = usuarioRepository.findById(idProfesor)
+        Usuario profesor = repository.findById(idProfesor)
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
 
         if (!"Profesor".equalsIgnoreCase(profesor.getRoles().getNombre())) {
@@ -219,7 +195,7 @@ public class UsuarioService {
     }
 
     public void modificarCursosDeProfesor(Long idProfesor, CursoPatchDTO dto) {
-        Usuario profesor = usuarioRepository.findById(idProfesor)
+        Usuario profesor = repository.findById(idProfesor)
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
 
         if (!"Profesor".equalsIgnoreCase(profesor.getRoles().getNombre())) {
