@@ -6,6 +6,7 @@ package com.EduTech.dto.user;
 
 import java.util.Date;
 
+import com.EduTech.model.Roles;
 import com.EduTech.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -25,8 +26,10 @@ public class UsuarioDTO {
         this.birthDate = user.getBirthDate();
     }
 
+
     public Usuario toUser() {
         Usuario user = new Usuario();
+        user.setId(id);
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);

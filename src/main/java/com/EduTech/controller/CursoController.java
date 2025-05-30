@@ -2,6 +2,7 @@
 package com.EduTech.controller;
 
 import com.EduTech.dto.cursoDTO.CursoDTO;
+import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.model.Curso;
 import com.EduTech.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,44 @@ public class CursoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar el curso: " + e.getMessage());
         }
+    }
+
+    //Autor Juan Olguin
+    @PutMapping("/inscribirEstudiante/{idCurso}/{idUsuario}")
+    public ResponseEntity<String> inscribirEstudiante(@PathVariable Long idCurso, @PathVariable Long idUsuario) {
+        try {
+            String mensaje = cursoService.inscribirEstudianteACurso(idCurso, idUsuario);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    //Autor Juan Olguin
+    @PutMapping("/removerEstudiante/{idCurso}/{idUsuario}")
+    public ResponseEntity<String> removerEstudiante(@PathVariable Long idCurso, @PathVariable Long idUsuario){
+        try {
+            String mensaje = cursoService.removerEstudiantedeCurso(idCurso, idUsuario);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    //Autor Victor Garces
+    // me permitira actualizar (Conjunto de ids)
+    @PutMapping("/cursos/{idProfesor}")
+    public ResponseEntity<String> reemplazarCursos(@PathVariable Long idProfesor, @RequestBody List<Long> idsCursos) {
+        cursoService.reemplazarCursosDeProfesor(idProfesor, idsCursos);
+        return ResponseEntity.ok("Cursos actualizados");
+    }
+
+    //Autor Victor Garces
+    @PatchMapping("/cursos/{idProfesor}")
+    public ResponseEntity<String> modificarCursos(@PathVariable Long idProfesor,
+                                                  @RequestBody CursoPatchDTO dto) {
+        cursoService.modificarCursosDeProfesor(idProfesor, dto);
+        return ResponseEntity.ok("Cursos modificados correctamente");
     }
 
 }

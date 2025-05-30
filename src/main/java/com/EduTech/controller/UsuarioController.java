@@ -28,7 +28,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<RespuestaUsuarioDto>> getAllUsers() {
         List<RespuestaUsuarioDto> users = service.getUsers();
         if (users.isEmpty()) {
@@ -61,22 +61,6 @@ public class UsuarioController {
         }
     }
 
-    @PatchMapping("change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ActualizarContraseniaDto userFields) {
-        try {
-            if (userFields.getEmail() == null || userFields.getOldPassword() == null || userFields.getNewPassword() == null) {
-                return ResponseEntity.badRequest().body("Email, old password, and new password must be provided");
-            }
-
-            String message = service.changePassword(userFields);
-            return ResponseEntity.ok(message);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
@@ -98,6 +82,7 @@ public class UsuarioController {
         }
     }
 
+    //Autor Victor Garces
     // es el cual me permitira ingresar el id del profesor y me listara los cursos asignados previamente
     @GetMapping("/profesor/detalle/{id}")
     public ResponseEntity<?> obtenerDetalleProfesor(@PathVariable Long id) {
@@ -109,20 +94,6 @@ public class UsuarioController {
         }
     }
 
-    // me permitira actualizar (Conjunto de ids)
-    @PutMapping("/cursos/{idProfesor}")
-    public ResponseEntity<String> reemplazarCursos(@PathVariable Long idProfesor, @RequestBody List<Long> idsCursos) {
-        service.reemplazarCursosDeProfesor(idProfesor, idsCursos);
-        return ResponseEntity.ok("Cursos actualizados");
-    }
-
-
-    @PatchMapping("/cursos/{idProfesor}")
-    public ResponseEntity<String> modificarCursos(@PathVariable Long idProfesor,
-                                                  @RequestBody CursoPatchDTO dto) {
-        service.modificarCursosDeProfesor(idProfesor, dto);
-        return ResponseEntity.ok("Cursos modificados correctamente");
-    }
 
 
 }

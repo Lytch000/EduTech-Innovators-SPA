@@ -109,25 +109,6 @@ public class UsuarioService {
         return responseDto;
     }
 
-    public String changePassword(ActualizarContraseniaDto fields) {
-        String email = fields.getEmail();
-        String oldPassword = fields.getOldPassword();
-
-        UsuarioDTO user = repository.findByEmail(email).orElseThrow();
-
-        String currentUserPassword = user.getPassword();
-
-        if (!currentUserPassword.equals(oldPassword)) 
-            throw new IllegalArgumentException("Old password does not match the current password.");
-        else if (currentUserPassword.equals(fields.getNewPassword())) 
-            throw new IllegalArgumentException("New password cannot be the same as the old password.");
-
-        user.setPassword(fields.getNewPassword());
-
-        repository.save(user.toUser());
-
-        return "Password for user with email: " + email + " has been changed successfully.";
-    }
 
     public String deleteUser(Long id) {
         Usuario user = repository.findById(id).orElseThrow();
@@ -171,55 +152,10 @@ public class UsuarioService {
         );
     }
 
-    // Esto me permitira actualizar
-    public void reemplazarCursosDeProfesor(Long idProfesor, List<Long> idsCursos) {
-        Usuario profesor = repository.findById(idProfesor)
-                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
-
-        if (!"Profesor".equalsIgnoreCase(profesor.getRoles().getNombre())) {
-            throw new RuntimeException("El usuario no tiene rol de Profesor");
-        }
-
-        // Eliminar asignaciones actuales
-        List<Curso> actuales = cursoRepository.findByProfesorId(idProfesor);
-        actuales.forEach(curso -> curso.setProfesor(null));
-        cursoRepository.saveAll(actuales);
-
-        // Asignar los nuevos cursos
-        for (Long idCurso : idsCursos) {
-            Curso curso = cursoRepository.findById(idCurso)
-                    .orElseThrow(() -> new RuntimeException("Curso no encontrado: " + idCurso));
-            curso.setProfesor(profesor);
-            cursoRepository.save(curso);
-        }
+    public UsuarioDTO login(String email, String password) {
+        return repository.findByEmailAndPassword(email, password)
+                .map(UsuarioDTO::new)
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
     }
-
-    public void modificarCursosDeProfesor(Long idProfesor, CursoPatchDTO dto) {
-        Usuario profesor = repository.findById(idProfesor)
-                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
-
-        if (!"Profesor".equalsIgnoreCase(profesor.getRoles().getNombre())) {
-            throw new RuntimeException("El usuario no es un profesor");
-        }
-
-        // Agregar cursos
-        if (dto.getIdsAgregar() != null && !dto.getIdsAgregar().isEmpty()) {
-            cursoRepository.findAllById(dto.getIdsAgregar()).forEach(curso -> {
-                curso.setProfesor(profesor);
-                cursoRepository.save(curso);
-            });
-        }
-
-        // Eliminar cursos
-        if (dto.getIdsEliminar() != null && !dto.getIdsEliminar().isEmpty()) {
-            cursoRepository.findAllById(dto.getIdsEliminar()).forEach(curso -> {
-                if (curso.getProfesor() != null && curso.getProfesor().getId().equals(idProfesor)) {
-                    curso.setProfesor(null);
-                    cursoRepository.save(curso);
-                }
-            });
-        }
-    }
-
 
 }
