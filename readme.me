@@ -20,60 +20,50 @@ Roles:
   }
 
 
-  {
-    "nombre": "Profesor",
-    "descripcion": "Puede gestionar cursos, subir contenido y calificar estudiantes",
-    "fechaCreacion": "2025-05-24T10:05:00"
-  }
 
---------------------- Victor ----------
-creacion de rol
+Usuarios;
 {
-    "nombre": "Profesor",
-    "descripcion": "Puede gestionar cursos, subir contenido y calificar estudiantes",
-    "fechaCreacion": "2025-05-24T10:05:00"
-  }
+  "firstName": "Juan",
+  "lastName": "Pérez",
+  "rut": "12345678-9",
+  "email": "juan.perez@example.com",
+  "password": "password123",
+  "birthDate": "1990-03-15",
+  "phoneNumber": 987654321,
+  "rolId" : 1
+}
 
-  Cracion de usuario
-  {
-      "rut": "98765432-9",
-      "nombre": "Victossss22r",
-      "edad": 335,
-      "email": "juan.perez@example.com",
-      "celular": 123456789,
-      "id_rol_fk": 1
-  }
+{
+    "firstName": "María",
+    "lastName": "González",
+    "rut": "98765432-1",
+    "email": "maria.gonzalez@example.com",
+    "password": "pass456",
+    "birthDate": "1985-07-23",
+    "phoneNumber": 912345678,
+    "rolId" : 2
+}
 
-  // Crea curso con el id del rol que en este caso seria profesor el que necesito
-  {
-    "nombreCurso": "Spring Boot Avanzado",
-    "descripcion": "Aprende a construir APIs REST con Spring Boot",
+{
+    "firstName": "Carlos",
+    "lastName": "Ramírez",
+    "rut": "11223344-5",
+    "email": "carlos.ramirez@example.com",
+    "password": "secure789",
+    "birthDate": "1992-11-30",
+    "phoneNumber": 911223344,
+    "rolId": 3
+}
+
+Cursos:
+{
+    "nombreCurso": "Curso de Java para principiantes",
+    "descripcion": "Aprende los conceptos básicos de Java, desde variables hasta clases y objetos.",
     "categoria": "Programación",
-    "horasDuracion": 20,
+    "horasDuracion": 40,
     "precioCurso": 49.99,
-    "fechaPublicacion": "2025-05-27T00:00:00.000+00:00",
+    "fechaPublicacion": "2025-05-28T00:00:00.000+00:00",
     "profesor": {
-      "id": 1
-    }
-
-    // Me permite actualizar datos de curso (http://localhost:8080/api/v1/cursos) PUT
-    {
-      "idCurso": 1,
-      "nombreCurso": "Curso ",
-      "descripcion": "Aprende programación avanzada.",
-      "categoria": "Programación",
-      "horasDuracion": 10,
-      "precioCurso": 20000.0,
-      "fechaPublicacion": "2025-05-23T15:55:00.000+00:00"
-    }
-
-  http://localhost:8080/api/v1/cursos/delete/ ------->>> Elimino el curso por el id
-  http://localhost:8080/api/v1/cursos/asignar-profesor/   ---->>> Asignamos por el id del curso a algun profesor en especifico
-
-  [1, 3] para el put de usuarios cursos (arriba adjuntar el id de profesor)
-
-  Para mi patch de agregar o eliminar cursos ya asignados a algun profesor por su id
-  {
-    "idsAgregar": [3],
-    "idsEliminar": [2]
-  }
+      "id": 2
+      }
+}
