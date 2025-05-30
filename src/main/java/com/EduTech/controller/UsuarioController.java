@@ -1,7 +1,9 @@
 package com.EduTech.controller;
 
-import com.EduTech.dto.user.LoginRequest;
 import com.EduTech.dto.user.UsuarioDTO;
+import com.EduTech.dto.cursoDTO.CursoPatchDTO;
+import com.EduTech.dto.cursoDTO.ProfesorDetalleCursoDTO;
+import com.EduTech.dto.user.LoginRequest;
 import com.EduTech.service.UsuarioService;
 import com.EduTech.dto.user.CrearUsuarioDto;
 import com.EduTech.dto.user.RespuestaUsuarioDto;
@@ -26,7 +28,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<RespuestaUsuarioDto>> getAllUsers() {
         List<RespuestaUsuarioDto> users = service.getUsers();
         if (users.isEmpty()) {
@@ -59,22 +61,6 @@ public class UsuarioController {
         }
     }
 
-    @PatchMapping("change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ActualizarContraseniaDto userFields) {
-        try {
-            if (userFields.getEmail() == null || userFields.getOldPassword() == null || userFields.getNewPassword() == null) {
-                return ResponseEntity.badRequest().body("Email, old password, and new password must be provided");
-            }
-
-            String message = service.changePassword(userFields);
-            return ResponseEntity.ok(message);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
@@ -95,5 +81,19 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
     }
+
+    //Autor Victor Garces
+    // es el cual me permitira ingresar el id del profesor y me listara los cursos asignados previamente
+    @GetMapping("/profesor/detalle/{id}")
+    public ResponseEntity<?> obtenerDetalleProfesor(@PathVariable Long id) {
+        try {
+            ProfesorDetalleCursoDTO detalle = service.obtenerDetalleProfesorConCursos(id);
+            return ResponseEntity.ok(detalle);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
 
 }

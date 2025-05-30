@@ -2,6 +2,7 @@
 package com.EduTech.controller;
 
 import com.EduTech.dto.cursoDTO.CursoDTO;
+import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.model.Curso;
 import com.EduTech.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +36,7 @@ public class CursoController {
     }
 
 
-    //Actualizamos curso
-    @PutMapping()
-    public ResponseEntity<String> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
-        if (cursoDTO.getIdCurso() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: ID del curso es obligatorio.");
-        }
-        try {
-            String mensaje = cursoService.actualizarCurso(cursoDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(mensaje);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar el curso: " + e.getMessage());
-        }
-    }
+
 
     // Eliminados curso por el ID registrado en base de datos
     @DeleteMapping("/delete/{idCurso}")
@@ -56,6 +44,7 @@ public class CursoController {
         return  cursoService.deleteCurso(idCurso);
     }
 
+    //Eliminamos profesor del curso ----
     @PutMapping("/remover-profesor/{idCurso}")
     public ResponseEntity<String> removerProfesor(@PathVariable Long idCurso) {
         try {
@@ -67,14 +56,30 @@ public class CursoController {
         }
     }
 
-    @PutMapping("/asignar-profesor/{idCurso}")
-    public ResponseEntity<String> asignarProfesor(@PathVariable Long idCurso) {
+    //Asignamos profesor ---
+    @PutMapping("/asignar-profesor/{idCurso}/{idUsuario}")
+    public ResponseEntity<String> asignarProfesor(@PathVariable Long idCurso, @PathVariable Long idUsuario) {
         try {
-            String mensaje = cursoService.asignarProfesorDeCurso(idCurso);
+            String mensaje = cursoService.asignarProfesorACurso(idCurso, idUsuario);
             return ResponseEntity.ok(mensaje);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al asignar el profesor: " + e.getMessage());
+        }
+    }
+
+    //Actualizamos curso --
+    @PutMapping()
+    public ResponseEntity<String> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
+        if (cursoDTO.getIdCurso() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: ID del curso es obligatorio.");
+        }
+        try {
+            String mensaje = cursoService.actualizarCurso(cursoDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el curso: " + e.getMessage());
         }
     }
 
@@ -98,6 +103,22 @@ public class CursoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    //Autor Victor Garces
+    // me permitira actualizar (Conjunto de ids)
+    @PutMapping("/cursos/{idProfesor}")
+    public ResponseEntity<String> reemplazarCursos(@PathVariable Long idProfesor, @RequestBody List<Long> idsCursos) {
+        cursoService.reemplazarCursosDeProfesor(idProfesor, idsCursos);
+        return ResponseEntity.ok("Cursos actualizados");
+    }
+
+    //Autor Victor Garces
+    @PatchMapping("/cursos/{idProfesor}")
+    public ResponseEntity<String> modificarCursos(@PathVariable Long idProfesor,
+                                                  @RequestBody CursoPatchDTO dto) {
+        cursoService.modificarCursosDeProfesor(idProfesor, dto);
+        return ResponseEntity.ok("Cursos modificados correctamente");
     }
 
 }
