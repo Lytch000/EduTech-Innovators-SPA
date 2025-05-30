@@ -58,6 +58,7 @@ public class Usuario {
 
     @ManyToOne
     @JoinColumn(name = "id_rol_fk")
+    @JsonIgnoreProperties
     private Roles roles;
 
     @ManyToMany(mappedBy = "estudiantes")

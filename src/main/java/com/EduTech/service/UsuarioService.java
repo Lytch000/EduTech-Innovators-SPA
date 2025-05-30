@@ -1,14 +1,15 @@
 package com.EduTech.service;
 
-import com.EduTech.dto.user.CrearUsuarioDto;
-import com.EduTech.dto.user.RespuestaUsuarioDto;
-import com.EduTech.dto.user.ActualizarUsuarioDto;
-import com.EduTech.dto.user.ActualizarContraseniaDto;
-import com.EduTech.dto.user.UsuarioDTO;
+import com.EduTech.dto.cursoDTO.CursoDTO;
+import com.EduTech.dto.cursoDTO.CursoPatchDTO;
+import com.EduTech.dto.cursoDTO.ProfesorDetalleCursoDTO;
+import com.EduTech.dto.user.*;
+import com.EduTech.model.Curso;
 import com.EduTech.model.Roles;
 import com.EduTech.model.Usuario;
-import com.EduTech.repository.RolesRepository;
 import com.EduTech.repository.UsuarioRepository;
+import com.EduTech.repository.RolesRepository;
+import com.EduTech.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,25 +109,6 @@ public class UsuarioService {
         return responseDto;
     }
 
-    public String changePassword(ActualizarContraseniaDto fields) {
-        String email = fields.getEmail();
-        String oldPassword = fields.getOldPassword();
-
-        UsuarioDTO user = repository.findByEmail(email).orElseThrow();
-
-        String currentUserPassword = user.getPassword();
-
-        if (!currentUserPassword.equals(oldPassword)) 
-            throw new IllegalArgumentException("Old password does not match the current password.");
-        else if (currentUserPassword.equals(fields.getNewPassword())) 
-            throw new IllegalArgumentException("New password cannot be the same as the old password.");
-
-        user.setPassword(fields.getNewPassword());
-
-        repository.save(user.toUser());
-
-        return "Password for user with email: " + email + " has been changed successfully.";
-    }
 
     public String deleteUser(Long id) {
         Usuario user = repository.findById(id).orElseThrow();
@@ -141,6 +123,34 @@ public class UsuarioService {
 
     @Autowired
     private RolesRepository rolesRepository;
+
+    @Autowired
+    private CursoRepository cursoRepository;
+
+
+    // Obtendre el profesor con los detalles del curso que tenga asignado
+    public ProfesorDetalleCursoDTO obtenerDetalleProfesorConCursos(Long idProfesor) {
+        Usuario profesor = repository.findById(idProfesor)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        if (!profesor.getRoles().getNombre().equalsIgnoreCase("Profesor")) {
+            throw new RuntimeException("El usuario no es un profesor");
+        }
+
+        List<Curso> cursosAsignados = cursoRepository.findByProfesorId(idProfesor);
+
+        List<CursoDTO> nombresCursos = cursosAsignados.stream()
+                .map(CursoDTO::new)
+                .toList();
+
+        return new ProfesorDetalleCursoDTO(
+                profesor.getId(),
+                profesor.getFirstName(),
+                profesor.getEmail(),
+                profesor.getRut(),
+                nombresCursos
+        );
+    }
 
     public UsuarioDTO login(String email, String password) {
         return repository.findByEmailAndPassword(email, password)

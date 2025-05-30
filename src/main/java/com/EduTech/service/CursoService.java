@@ -3,6 +3,7 @@ package com.EduTech.service;
 
 
 import com.EduTech.dto.cursoDTO.CursoDTO;
+import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.model.Curso;
 import com.EduTech.model.Usuario;
 import com.EduTech.repository.CursoRepository;
@@ -46,7 +47,7 @@ public class CursoService {
         return cursoRepository.save(curso);
     }
 
-    //Actualizamos curso
+    //Actualizamos curso --
     public String actualizarCurso(CursoDTO cursoDTO) {
         if (cursoDTO.getIdCurso() == null) {
             return "Error: El ID del curso es obligatorio.";
@@ -82,6 +83,7 @@ public class CursoService {
         }
     }
 
+    //Eliminamos profesor del curso ----
     public String removerProfesorDeCurso(Long idCurso) {
         Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
         if (!cursoOpt.isPresent()) {
@@ -95,21 +97,7 @@ public class CursoService {
         return "Profesor removido del curso.";
     }
 
-    public String asignarProfesorDeCurso(Long idCurso) {
-        Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
-        if (!cursoOpt.isPresent()) {
-            return "Curso no encontrado.";
-        }
-
-        Curso curso = cursoOpt.get();
-        curso.setProfesor(null);
-        cursoRepository.save(curso);
-
-        return "Profesor asignado al curso.";
-    }
-
-    //Probando
-
+    // Asignamos profesor ---
     public String asignarProfesorACurso(Long idCurso, Long idProfesor) {
         Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
         if (!cursoOpt.isPresent()) {
@@ -135,6 +123,8 @@ public class CursoService {
         return "Profesor asignado al curso correctamente.";
     }
 
+
+
     //Autor Juan Olguin
     public String inscribirEstudianteACurso(Long idCurso, Long idUsuario) {
         Curso curso = cursoRepository.findById(idCurso)
@@ -148,7 +138,7 @@ public class CursoService {
 
         return "Estudiante inscrito correctamente al curso.";
     }
-
+//Autor Juan Olguin
     public String removerEstudiantedeCurso(Long idCurso, Long idUsuario){
         Curso curso = cursoRepository.findById(idCurso)
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
@@ -161,6 +151,58 @@ public class CursoService {
 
         return "Estudiante removido correctamente";
     }
+
+
+    // Esto me permitira actualizar
+    public void reemplazarCursosDeProfesor(Long idProfesor, List<Long> idsCursos) {
+        Usuario profesor = usuarioRepository.findById(idProfesor)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        if (!"Profesor".equalsIgnoreCase(profesor.getRoles().getNombre())) {
+            throw new RuntimeException("El usuario no tiene rol de Profesor");
+        }
+
+        // Eliminar asignaciones actuales
+        List<Curso> actuales = cursoRepository.findByProfesorId(idProfesor);
+        actuales.forEach(curso -> curso.setProfesor(null));
+        cursoRepository.saveAll(actuales);
+
+        // Asignar los nuevos cursos
+        for (Long idCurso : idsCursos) {
+            Curso curso = cursoRepository.findById(idCurso)
+                    .orElseThrow(() -> new RuntimeException("Curso no encontrado: " + idCurso));
+            curso.setProfesor(profesor);
+            cursoRepository.save(curso);
+        }
+    }
+
+    public void modificarCursosDeProfesor(Long idProfesor, CursoPatchDTO dto) {
+        Usuario profesor = usuarioRepository.findById(idProfesor)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        if (!"Profesor".equalsIgnoreCase(profesor.getRoles().getNombre())) {
+            throw new RuntimeException("El usuario no es un profesor");
+        }
+
+        // Agregar cursos
+        if (dto.getIdsAgregar() != null && !dto.getIdsAgregar().isEmpty()) {
+            cursoRepository.findAllById(dto.getIdsAgregar()).forEach(curso -> {
+                curso.setProfesor(profesor);
+                cursoRepository.save(curso);
+            });
+        }
+
+        // Eliminar cursos
+        if (dto.getIdsEliminar() != null && !dto.getIdsEliminar().isEmpty()) {
+            cursoRepository.findAllById(dto.getIdsEliminar()).forEach(curso -> {
+                if (curso.getProfesor() != null && curso.getProfesor().getId().equals(idProfesor)) {
+                    curso.setProfesor(null);
+                    cursoRepository.save(curso);
+                }
+            });
+        }
+    }
+
 
 }
 
