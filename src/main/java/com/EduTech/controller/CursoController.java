@@ -57,10 +57,10 @@ public class CursoController {
     }
 
     //Asignamos profesor ---
-    @PutMapping("/asignar-profesor/{idCurso}")
-    public ResponseEntity<String> asignarProfesor(@PathVariable Long idCurso) {
+    @PutMapping("/asignar-profesor/{idCurso}/{idUsuario}")
+    public ResponseEntity<String> asignarProfesor(@PathVariable Long idCurso, @PathVariable Long idUsuario) {
         try {
-            String mensaje = cursoService.asignarProfesorDeCurso(idCurso);
+            String mensaje = cursoService.asignarProfesorACurso(idCurso, idUsuario);
             return ResponseEntity.ok(mensaje);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

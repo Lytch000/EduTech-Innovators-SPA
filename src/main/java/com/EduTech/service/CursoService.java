@@ -98,17 +98,29 @@ public class CursoService {
     }
 
     // Asignamos profesor ---
-    public String asignarProfesorDeCurso(Long idCurso) {
+    public String asignarProfesorACurso(Long idCurso, Long idProfesor) {
         Optional<Curso> cursoOpt = cursoRepository.findById(idCurso);
         if (!cursoOpt.isPresent()) {
             return "Curso no encontrado.";
         }
 
+        Optional<Usuario> profesorOpt = usuarioRepository.findById(idProfesor);
+        if (!profesorOpt.isPresent()) {
+            return "Profesor no encontrado.";
+        }
+
+        Usuario profesor = profesorOpt.get();
+
+        // Validar que tenga el rol de "Profesor"
+        if (!profesor.getRoles().getNombre().equalsIgnoreCase("Profesor")) {
+            return "El usuario no tiene el rol de Profesor.";
+        }
+
         Curso curso = cursoOpt.get();
-        curso.setProfesor(null);
+        curso.setProfesor(profesor);
         cursoRepository.save(curso);
 
-        return "Profesor asignado al curso.";
+        return "Profesor asignado al curso correctamente.";
     }
 
 
