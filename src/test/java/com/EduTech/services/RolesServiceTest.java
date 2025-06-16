@@ -10,10 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-
-
-
 
 class RolesServiceTest {
 
@@ -32,7 +31,7 @@ class RolesServiceTest {
     }
 
     @Test
-    void listar_debeRetornarListaDeRolesDTO() {
+    void listar() {
         Roles rol = new Roles();
         rol.setId(1L);
         rol.setNombre("Admin");
@@ -55,12 +54,26 @@ class RolesServiceTest {
     }
 
     @Test
-    void addNewRol_debeGuardarYRetornarRol() {
+    void listarSinContenido() {
+        when(rolesRepository.buscarTodos()).thenReturn(List.of());
+
+        List<RolesDTO> roles = rolesService.listar();
+
+        assertNotNull(roles);
+        assertTrue(roles.isEmpty());
+        verify(rolesRepository, times(1)).buscarTodos();
+    }
+
+    @Test
+    void addNewRol() {
         Roles rol = new Roles();
         rol.setId(2L);
         rol.setNombre("Cliente");
+        rol.setDescripcion("Cliente del sistema");
+        rol.setFechaCreacion(new Date());
 
-        when(rolesRepository.save(rol)).thenReturn(rol);
+        when(rolesRepository.findByNombre("Cliente")).thenReturn(null);
+        when(rolesRepository.save(any(Roles.class))).thenReturn(rol);
 
         Roles result = rolesService.addNewRol(rol);
 
@@ -70,7 +83,68 @@ class RolesServiceTest {
     }
 
     @Test
-    void deleteRol_rolNoExiste_debeRetornarMensajeNoEncontrado() {
+    void addNewRolNombreVacio() {
+        Roles rol = new Roles();
+        rol.setNombre("");
+        rol.setDescripcion("desc");
+        rol.setFechaCreacion(new Date());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
+        assertEquals("El nombre del rol no puede estar vacío", ex.getMessage());
+    }
+
+    @Test
+    void addNewRolNombreNull() {
+        Roles rol = new Roles();
+        rol.setNombre(null);
+        rol.setDescripcion("desc");
+        rol.setFechaCreacion(new Date());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
+        assertEquals("El nombre del rol no puede estar vacío", ex.getMessage());
+    }
+
+    @Test
+    void addNewRolDescripcionVacia() {
+        Roles rol = new Roles();
+        rol.setNombre("Admin");
+        rol.setDescripcion("");
+        rol.setFechaCreacion(new Date());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
+        assertEquals("La descripción del rol no puede estar vacía", ex.getMessage());
+    }
+
+    @Test
+    void addNewRolDescripcionNull() {
+        Roles rol = new Roles();
+        rol.setNombre("Admin");
+        rol.setDescripcion(null);
+        rol.setFechaCreacion(new Date());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
+        assertEquals("La descripción del rol no puede estar vacía", ex.getMessage());
+    }
+
+    @Test
+    void addNewRolFechaCreacionNull() {
+        Roles rol = new Roles();
+        rol.setNombre("Admin");
+        rol.setDescripcion("desc");
+        rol.setFechaCreacion(null);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
+        assertEquals("La fecha de creación no puede estar vacía", ex.getMessage());
+    }
+
+    @Test
+    void addNewRolDuplicado() {
+        Roles rol = new Roles();
+        rol.setNombre("Admin");
+        rol.setDescripcion("desc");
+        rol.setFechaCreacion(new Date());
+        when(rolesRepository.findByNombre("Admin")).thenReturn(new Roles());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
+        assertEquals("El rol ya existe", ex.getMessage());
+    }
+
+    @Test
+    void deleteRolRolNoExiste() {
         when(rolesRepository.existsById(99L)).thenReturn(false);
 
         String result = rolesService.deleteRol(99L);
@@ -81,7 +155,7 @@ class RolesServiceTest {
     }
 
     @Test
-    void deleteRol_rolExiste_debeEliminarYRetornarMensajeCorrecto() {
+    void deleteRol() {
         when(rolesRepository.existsById(1L)).thenReturn(true);
         doNothing().when(rolesRepository).deleteById(1L);
 
@@ -92,7 +166,7 @@ class RolesServiceTest {
     }
 
     @Test
-    void updateRol_rolNoExiste_debeRetornarMensajeNoEncontrado() {
+    void updateRolRolNoExiste() {
         when(rolesRepository.existsById(5L)).thenReturn(false);
 
         Roles nuevoRol = new Roles();
@@ -106,7 +180,7 @@ class RolesServiceTest {
     }
 
     @Test
-    void updateRol_rolExiste_debeActualizarYRetornarMensajeCorrecto() {
+    void updateRol() {
         when(rolesRepository.existsById(3L)).thenReturn(true);
 
         Roles nuevoRol = new Roles();

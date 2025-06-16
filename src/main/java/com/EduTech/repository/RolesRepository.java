@@ -19,5 +19,7 @@ public interface RolesRepository extends JpaRepository<Roles, Long> {
             "FROM Roles r " +
             "LEFT JOIN Usuario u ON u.roles.id = r.id")
     List<RolesDTO> buscarTodos();
+
+    Roles findByNombre(String nombre);
 }
 
