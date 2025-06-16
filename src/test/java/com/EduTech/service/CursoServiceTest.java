@@ -1,7 +1,6 @@
 package com.EduTech.service;
 
 import com.EduTech.repository.*;
-import com.EduTech.service.CursoService;
 import com.EduTech.dto.cursoDTO.CursoDTO;
 import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.model.Curso;
@@ -364,11 +363,6 @@ void testAddNewCurso_SinProfesor_LanzaExcepcion() {
         cursoService.reemplazarCursosDeProfesor(profesorId, idsCursos)
     );
     assertEquals("El usuario no tiene rol de Profesor", exception.getMessage());
-    }
-
-    @Test
-    void testmodificarCursosDeProfesor(){
-        
     }
 
 
