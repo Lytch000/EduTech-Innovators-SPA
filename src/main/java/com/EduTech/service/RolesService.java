@@ -27,15 +27,11 @@ public class RolesService {
         return rolesDTO;
     }
 
-    private void validarDuplicidadNombre(String nombre, Long idActual) {
-        Roles existente = rolesRepository.findByNombre(nombre);
-        if (existente != null && (idActual == null || !existente.getId().equals(idActual))) {
+    public Roles addNewRol(RolRequest rolRequest) {
+        Roles existente = rolesRepository.findByNombre(rolRequest.getNombre());
+        if (existente != null) {
             throw new IllegalArgumentException("El nombre del rol ya está en uso");
         }
-    }
-
-    public Roles addNewRol(RolRequest rolRequest) {
-        validarDuplicidadNombre(rolRequest.getNombre(), null);
 
         Roles rol = new Roles();
         rol.setNombre(rolRequest.getNombre());
@@ -59,7 +55,10 @@ public class RolesService {
             return "No se encuentra rol indicado";
         }
 
-        validarDuplicidadNombre(rolRequest.getNombre(), id);
+        Roles existente = rolesRepository.findByNombre(rolRequest.getNombre());
+        if (existente != null && !existente.getId().equals(id)) {
+            throw new IllegalArgumentException("El nombre del rol ya está en uso");
+        }
 
         Roles nuevoRol = new Roles();
         nuevoRol.setId(id);

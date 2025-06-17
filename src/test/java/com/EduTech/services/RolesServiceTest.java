@@ -1,6 +1,6 @@
-/* 
 package com.EduTech.services;
 
+import com.EduTech.dto.roles.RolRequest;
 import com.EduTech.dto.roles.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.repository.RolesRepository;
@@ -66,82 +66,50 @@ class RolesServiceTest {
     }
 
     @Test
+    void listarSinContenido_noLlamaUsuarioRepository() {
+        when(rolesRepository.buscarTodos()).thenReturn(List.of());
+
+        List<RolesDTO> roles = rolesService.listar();
+
+        assertNotNull(roles);
+        assertTrue(roles.isEmpty());
+        verify(usuarioRepository, never()).findAllByIdRoles(anyLong());
+    }
+
+    // Test: crear rol exitosamente (no existe duplicado)
+    @Test
     void addNewRol() {
+        RolRequest rolRequest = new RolRequest();
+        rolRequest.setNombre("Admin");
+        rolRequest.setDescripcion("Administrador del sistema");
+        rolRequest.setFechaCreacion(new Date());
+
         Roles rol = new Roles();
         rol.setId(2L);
-        rol.setNombre("Cliente");
-        rol.setDescripcion("Cliente del sistema");
-        rol.setFechaCreacion(new Date());
+        rol.setNombre(rolRequest.getNombre());
+        rol.setDescripcion(rolRequest.getDescripcion());
+        rol.setFechaCreacion(rolRequest.getFechaCreacion());
 
-        when(rolesRepository.findByNombre("Cliente")).thenReturn(null);
+        when(rolesRepository.findByNombre("Admin")).thenReturn(null);
         when(rolesRepository.save(any(Roles.class))).thenReturn(rol);
 
-        Roles result = rolesService.addNewRol(rol);
+        Roles resultado = rolesService.addNewRol(rolRequest);
 
-        assertNotNull(result);
-        assertEquals("Cliente", result.getNombre());
-        verify(rolesRepository, times(1)).save(rol);
+        assertNotNull(resultado);
+        assertEquals("Admin", resultado.getNombre());
+        verify(rolesRepository, times(1)).save(any(Roles.class));
     }
 
-    @Test
-    void addNewRolNombreVacio() {
-        Roles rol = new Roles();
-        rol.setNombre("");
-        rol.setDescripcion("desc");
-        rol.setFechaCreacion(new Date());
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
-        assertEquals("El nombre del rol no puede estar vacío", ex.getMessage());
-    }
-
-    @Test
-    void addNewRolNombreNull() {
-        Roles rol = new Roles();
-        rol.setNombre(null);
-        rol.setDescripcion("desc");
-        rol.setFechaCreacion(new Date());
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
-        assertEquals("El nombre del rol no puede estar vacío", ex.getMessage());
-    }
-
-    @Test
-    void addNewRolDescripcionVacia() {
-        Roles rol = new Roles();
-        rol.setNombre("Admin");
-        rol.setDescripcion("");
-        rol.setFechaCreacion(new Date());
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
-        assertEquals("La descripción del rol no puede estar vacía", ex.getMessage());
-    }
-
-    @Test
-    void addNewRolDescripcionNull() {
-        Roles rol = new Roles();
-        rol.setNombre("Admin");
-        rol.setDescripcion(null);
-        rol.setFechaCreacion(new Date());
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
-        assertEquals("La descripción del rol no puede estar vacía", ex.getMessage());
-    }
-
-    @Test
-    void addNewRolFechaCreacionNull() {
-        Roles rol = new Roles();
-        rol.setNombre("Admin");
-        rol.setDescripcion("desc");
-        rol.setFechaCreacion(null);
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
-        assertEquals("La fecha de creación no puede estar vacía", ex.getMessage());
-    }
-
+    // Test: crear rol duplicado (debe lanzar excepción)
     @Test
     void addNewRolDuplicado() {
-        Roles rol = new Roles();
-        rol.setNombre("Admin");
-        rol.setDescripcion("desc");
-        rol.setFechaCreacion(new Date());
+        RolRequest rolRequest = new RolRequest();
+        rolRequest.setNombre("Admin");
+        rolRequest.setDescripcion("desc");
+        rolRequest.setFechaCreacion(new Date());
         when(rolesRepository.findByNombre("Admin")).thenReturn(new Roles());
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rol));
-        assertEquals("El rol ya existe", ex.getMessage());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.addNewRol(rolRequest));
+        assertEquals("El nombre del rol ya está en uso", ex.getMessage());
     }
 
     @Test
@@ -170,8 +138,10 @@ class RolesServiceTest {
     void updateRolRolNoExiste() {
         when(rolesRepository.existsById(5L)).thenReturn(false);
 
-        Roles nuevoRol = new Roles();
+        RolRequest nuevoRol = new RolRequest();
         nuevoRol.setNombre("Nuevo");
+        nuevoRol.setDescripcion("desc");
+        nuevoRol.setFechaCreacion(new Date());
 
         String result = rolesService.updateRol(5L, nuevoRol);
 
@@ -184,15 +154,64 @@ class RolesServiceTest {
     void updateRol() {
         when(rolesRepository.existsById(3L)).thenReturn(true);
 
-        Roles nuevoRol = new Roles();
+        RolRequest nuevoRol = new RolRequest();
         nuevoRol.setNombre("Actualizado");
+        nuevoRol.setDescripcion("desc");
+        nuevoRol.setFechaCreacion(new Date());
 
-        when(rolesRepository.save(any(Roles.class))).thenReturn(nuevoRol);
+        Roles rolActualizado = new Roles();
+        rolActualizado.setId(3L);
+        rolActualizado.setNombre("Actualizado");
+        rolActualizado.setDescripcion("desc");
+        rolActualizado.setFechaCreacion(nuevoRol.getFechaCreacion());
+
+        when(rolesRepository.save(any(Roles.class))).thenReturn(rolActualizado);
 
         String result = rolesService.updateRol(3L, nuevoRol);
 
         assertEquals("Rol actualizado correctamente", result);
-        verify(rolesRepository, times(1)).save(nuevoRol);
+        verify(rolesRepository, times(1)).save(any(Roles.class));
+    }
+
+    // Test: actualizar rol exitosamente (nombre igual al mismo id)
+    @Test
+    void updateRolNombreIgualMismoId_noLanzaExcepcion() {
+        when(rolesRepository.existsById(10L)).thenReturn(true);
+
+        RolRequest nuevoRol = new RolRequest();
+        nuevoRol.setNombre("Admin");
+        nuevoRol.setDescripcion("desc");
+        nuevoRol.setFechaCreacion(new Date());
+
+        Roles existente = new Roles();
+        existente.setId(10L);
+        existente.setNombre("Admin");
+        when(rolesRepository.findByNombre("Admin")).thenReturn(existente);
+
+        when(rolesRepository.save(any(Roles.class))).thenReturn(existente);
+
+        String result = rolesService.updateRol(10L, nuevoRol);
+
+        assertEquals("Rol actualizado correctamente", result);
+        verify(rolesRepository, times(1)).save(any(Roles.class));
+    }
+
+    // Test: actualizar rol con nombre duplicado (otro id)
+    @Test
+    void updateRolNombreDuplicado() {
+        when(rolesRepository.existsById(11L)).thenReturn(true);
+
+        RolRequest nuevoRol = new RolRequest();
+        nuevoRol.setNombre("Admin");
+        nuevoRol.setDescripcion("desc");
+        nuevoRol.setFechaCreacion(new Date());
+
+        Roles existente = new Roles();
+        existente.setId(99L); // otro id
+        existente.setNombre("Admin");
+        when(rolesRepository.findByNombre("Admin")).thenReturn(existente);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> rolesService.updateRol(11L, nuevoRol));
+        assertEquals("El nombre del rol ya está en uso", ex.getMessage());
     }
 }
-*/
