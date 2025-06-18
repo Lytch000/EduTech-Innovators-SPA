@@ -48,14 +48,18 @@ public class RolesController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteRol(@PathVariable Long id){
         return rolesService.deleteRol(id);
     }
 
     @PutMapping("/update/{id}")
-    public String updateRol(@PathVariable Long id, @RequestBody Roles rol){
-        return rolesService.updateRol(id, rol);
+    public ResponseEntity<String> updateRol(@PathVariable Long id, @RequestBody Roles rol) {
+        String resultado = rolesService.updateRol(id, rol);
+        if ("No se encuentra rol indicado".equals(resultado)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultado);
+        }
+        return ResponseEntity.ok(resultado);
     }
 
 }
