@@ -27,9 +27,21 @@ public class RolesService {
         return rolesDTO;
     }
 
-    public Roles addNewRol(Roles rol){
-        return rolesRepository.save(rol);
+    public Roles addNewRol(Roles rol) {
+    if (rol.getNombre() == null || rol.getNombre().isEmpty()) {
+        throw new IllegalArgumentException("El nombre del rol no puede estar vacío");
     }
+    if (rol.getDescripcion() == null || rol.getDescripcion().isEmpty()) {
+        throw new IllegalArgumentException("La descripción del rol no puede estar vacía");
+    }
+    if (rol.getFechaCreacion() == null) {
+        throw new IllegalArgumentException("La fecha de creación no puede estar vacía");
+    }
+    if (rolesRepository.findByNombre(rol.getNombre()) != null) {
+        throw new IllegalArgumentException("El rol ya existe");
+    }
+    return rolesRepository.save(rol);
+}
 
     public String deleteRol(Long id){
         if(!rolesRepository.existsById(id)){

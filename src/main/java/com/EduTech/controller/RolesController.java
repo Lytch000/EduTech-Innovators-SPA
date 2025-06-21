@@ -2,6 +2,7 @@ package com.EduTech.controller;
 
 import com.EduTech.dto.roles.RolesDTO;
 import com.EduTech.model.Roles;
+import com.EduTech.repository.RolesRepository;
 import com.EduTech.service.RolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,30 +18,48 @@ public class RolesController {
     @Autowired
     private RolesService rolesService;
 
-    @GetMapping()
+    @Autowired
+    private RolesRepository rolesRepository;
+
+    @GetMapping
     public ResponseEntity<List<RolesDTO>> listar(){
         List<RolesDTO> roles = rolesService.listar();
         
         if(roles.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(roles);
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(roles);
     }
 
     @PostMapping()
-    public Roles addNewRol(@RequestBody Roles rol){
-        return rolesService.addNewRol(rol);
+    public ResponseEntity<?> addNewRol(@RequestBody Roles rol){
+        try {
+            Roles nuevoRol = rolesService.addNewRol(rol);
+            return ResponseEntity.ok(nuevoRol);
+        } catch (IllegalArgumentException ex) {
+            String msg = ex.getMessage();
+            if (msg.contains("vacío")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+            } else if (msg.contains("ya existe")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(msg);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+        }
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteRol(@PathVariable Long id){
         return rolesService.deleteRol(id);
     }
 
     @PutMapping("/update/{id}")
-    public String updateRol(@PathVariable Long id, @RequestBody Roles rol){
-        return rolesService.updateRol(id, rol);
+    public ResponseEntity<String> updateRol(@PathVariable Long id, @RequestBody Roles rol) {
+        String resultado = rolesService.updateRol(id, rol);
+        if ("No se encuentra rol indicado".equals(resultado)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultado);
+        }
+        return ResponseEntity.ok(resultado);
     }
 
 }
