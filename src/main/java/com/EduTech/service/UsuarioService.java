@@ -153,6 +153,12 @@ public class UsuarioService {
     }
 
     public UsuarioDTO login(String email, String password) {
+        if(email == null || email.isEmpty()){
+            throw new IllegalArgumentException("El email no puede estar vacio");
+        }
+        if(password == null || password.isEmpty()){
+            throw new IllegalArgumentException("El password no puede estar vacio");
+        }
         return repository.findByEmailAndPassword(email, password)
                 .map(UsuarioDTO::new)
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
