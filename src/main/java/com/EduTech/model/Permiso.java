@@ -6,6 +6,8 @@ import java.util.Set;
 
 import com.EduTech.dto.permissions.CrearPermisoDto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ import lombok.Data;
  * @author Franco Carrasco
  * @version 1.0
  */
+@Schema(description = "Entidad que representa un permiso del sistema.")
 @Data
 @Entity
 @Table(name = "permisos")
@@ -38,25 +41,32 @@ public class Permiso {
         this.fechaActualizacion = new Date();
     }
 
+    @Schema(description = "Identificador único del permiso", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Nombre del permiso", example = "CREAR_USUARIO")
     @Column(nullable = false, length = 50)
     private String nombre;
 
+    @Schema(description = "Descripción del permiso", example = "Permite crear usuarios")
     @Column(nullable = false, length = 100)
     private String descripcion;
 
+    @Schema(description = "Indica si el permiso está activo", example = "true")
     @Column(nullable = false)
     private Boolean activo = true;
 
+    @Schema(description = "Fecha de creación del permiso", example = "2025-06-22T00:00:00.000+00:00")
     @Column(nullable = false)
     private Date fechaCreacion;
 
+    @Schema(description = "Fecha de última actualización del permiso", example = "2025-06-22T00:00:00.000+00:00")
     @Column(nullable = false)
     private Date fechaActualizacion;
 
+    @Schema(description = "Roles asociados a este permiso", hidden = true)
     @ManyToMany
     @JoinTable(
         name = "roles_permisos",

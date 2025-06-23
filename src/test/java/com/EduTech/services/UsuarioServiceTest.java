@@ -147,4 +147,32 @@ class UsuarioServiceTest {
         assertEquals("El email no puede estar vacio", ex.getMessage());
 
     }
+
+    @Test
+    void loginPasswordVacio(){
+        Usuario usuario = new Usuario();
+        usuario.setEmail("correo@prueba.com");
+        usuario.setPassword("");
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioService.login(usuario.getEmail(), usuario.getPassword());
+        });
+
+        assertEquals("El password no puede estar vacio", ex.getMessage());
+        
+    }
+
+    @Test
+    void loginPasswordNulo(){
+        Usuario usuario = new Usuario();
+        usuario.setEmail("correo@prueba.com");
+        usuario.setPassword(null);
+        
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+            usuarioService.login(usuario.getEmail(), usuario.getPassword());
+        });
+
+        assertEquals("El password no puede estar vacio", ex.getMessage());
+
+    }
 }
