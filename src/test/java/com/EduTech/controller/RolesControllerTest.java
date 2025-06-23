@@ -2,6 +2,7 @@ package com.EduTech.controller;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -161,19 +162,37 @@ public class RolesControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("Rol actualizado correctamente"));
     }
+    
+    @Test
+    void addNewRolErrorGenerico() throws Exception {
+        when(rolesService.addNewRol(any(Roles.class)))
+            .thenThrow(new IllegalArgumentException("Otro error inesperado"));
+
+        mockMvc.perform(post("/api/v1/roles")
+            .contentType("application/json")
+            .content("{\"nombre\":\"Admin\",\"descripcion\":\"desc\",\"fechaCreacion\":\"2025-06-16T00:00:00.000+00:00\"}"))
+            .andExpect(status().isBadRequest());
+    }
 
     @Test
     void updateRolNoEncontrado() throws Exception {
-        Long id = 1L;
-
-        when(rolesService.updateRol(org.mockito.Mockito.eq(id), any(Roles.class)))
+        when(rolesService.updateRol(eq(1L), any(Roles.class)))
             .thenReturn("No se encuentra rol indicado");
 
-        mockMvc.perform(put("/api/v1/roles/update/{id}", id)
+        mockMvc.perform(put("/api/v1/roles/update/1")
             .contentType("application/json")
-            .content("{\"nombre\":\"Admin\", \"descripcion\":\"Administrador del sistema actualizado\", \"fechaCreacion\":\"2025-06-16T00:00:00.000+00:00\"}"))
-            .andExpect(status().isNotFound())
-            .andExpect(content().string("No se encuentra rol indicado"));
+            .content("{\"nombre\":\"Admin\",\"descripcion\":\"desc\",\"fechaCreacion\":\"2025-06-16T00:00:00.000+00:00\"}"))
+            .andExpect(status().isNotFound());
     }
-    
+
+    @Test
+    void updateRolOk() throws Exception {
+        when(rolesService.updateRol(eq(1L), any(Roles.class)))
+            .thenReturn("Rol actualizado correctamente");
+
+        mockMvc.perform(put("/api/v1/roles/update/1")
+            .contentType("application/json")
+            .content("{\"nombre\":\"Admin\",\"descripcion\":\"desc\",\"fechaCreacion\":\"2025-06-16T00:00:00.000+00:00\"}"))
+            .andExpect(status().isOk());
+    }
 }

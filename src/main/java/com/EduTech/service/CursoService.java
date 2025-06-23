@@ -127,11 +127,16 @@ public class CursoService {
 
     //Autor Juan Olguin
     public String inscribirEstudianteACurso(Long idCurso, Long idUsuario) {
+        if(idCurso == null ){
+            throw new IllegalArgumentException("El id del curso no puede ser nulo");
+        }
+        if(idUsuario == null){
+            throw new IllegalArgumentException("El id del usuario no puede ser nulo");
+        }
         Curso curso = cursoRepository.findById(idCurso)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
-
+                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
         Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         curso.getEstudiantes().add(usuario);
         cursoRepository.save(curso);
@@ -140,11 +145,16 @@ public class CursoService {
     }
 //Autor Juan Olguin
     public String removerEstudiantedeCurso(Long idCurso, Long idUsuario){
+        if(idCurso == null ){
+            throw new IllegalArgumentException("El id del curso no puede ser nulo");
+        }
+        if(idUsuario == null){
+            throw new IllegalArgumentException("El id del usuario no puede ser nulo");
+        }
         Curso curso = cursoRepository.findById(idCurso)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
-
+                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
         Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         curso.getEstudiantes().remove(usuario);
         cursoRepository.save(curso);
