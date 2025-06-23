@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -228,28 +229,80 @@ public class CursoControllerTest {
 
     @Test
     void testModificarCursosDeProfesor() throws Exception {
-    Long idProfesor = 1L;
-    CursoPatchDTO dto = new CursoPatchDTO();
-    dto.setIdsAgregar(List.of(10L, 20L));
-    dto.setIdsEliminar(List.of(30L));
+        Long idProfesor = 1L;
+        CursoPatchDTO dto = new CursoPatchDTO();
+        dto.setIdsAgregar(List.of(10L, 20L));
+        dto.setIdsEliminar(List.of(30L));
 
-    // No necesitas mockear el retorno porque el método del servicio es void
-    doNothing().when(cursoService).modificarCursosDeProfesor(eq(idProfesor), any(CursoPatchDTO.class));
+        // No necesitas mockear el retorno porque el método del servicio es void
+        doNothing().when(cursoService).modificarCursosDeProfesor(eq(idProfesor), any(CursoPatchDTO.class));
 
-    String dtoJson = """
-        {
-            "idsAgregar": [10, 20],
-            "idsEliminar": [30]
-        }
-        """;
+        String dtoJson = """
+                {
+                "idsAgregar": [10, 20],
+                "idsEliminar": [30]
+                }
+                """;
 
-    mockMvc.perform(patch("/api/v1/cursos/cursos/{idProfesor}", idProfesor)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(dtoJson))
-            .andExpect(status().isOk())
-            .andExpect(content().string("Cursos modificados correctamente"));
+        mockMvc.perform(patch("/api/v1/cursos/cursos/{idProfesor}", idProfesor)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dtoJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Cursos modificados correctamente"));
     }
 
+    @Test
+    void inscribirEstudianteACurso() throws Exception {
+        Long idCurso = 1L;
+        Long idUsuario = 1L;
+
+        when(cursoService.inscribirEstudianteACurso(eq(idCurso), eq(idUsuario)))
+                .thenReturn("Estudiante inscrito correctamente al curso.");
+        
+        mockMvc.perform(put("/api/v1/cursos/inscribirEstudiante/{idCurso}/{idUsuario}", idCurso, idUsuario))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Estudiante inscrito correctamente al curso."));
     
 
+    }
+
+    @Test
+    void removerEstudiantedeCurso() throws Exception {
+        Long idCurso = 1L;
+        Long idUsuario = 1L;
+
+        when(cursoService.removerEstudiantedeCurso(eq(idCurso), eq(idUsuario)))
+                .thenReturn("Estudiante removido correctamente");
+
+        mockMvc.perform(put("/api/v1/cursos/removerEstudiante/{idCurso}/{idUsuario}", idCurso, idUsuario))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Estudiante removido correctamente"));
+    
+    }
+
+    @Test
+    void inscribirEstudianteACurso_Error() throws Exception {
+        Long idCurso = 1L;
+        Long idUsuario = 1L;
+
+        when(cursoService.inscribirEstudianteACurso(eq(idCurso), eq(idUsuario)))
+                .thenThrow(new IllegalArgumentException("Curso no encontrado"));
+
+        mockMvc.perform(put("/api/v1/cursos/inscribirEstudiante/{idCurso}/{idUsuario}", idCurso, idUsuario))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Curso no encontrado"));
+    }
+
+    @Test
+    void removerEstudiantedeCurso_Error() throws Exception {
+        Long idCurso = 1L;
+        Long idUsuario = 1L;
+
+        when(cursoService.removerEstudiantedeCurso(eq(idCurso), eq(idUsuario)))
+                .thenThrow(new IllegalArgumentException("Usuario no encontrado"));
+
+        mockMvc.perform(put("/api/v1/cursos/removerEstudiante/{idCurso}/{idUsuario}", idCurso, idUsuario))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Usuario no encontrado"));
+    }
 }

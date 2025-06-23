@@ -10,7 +10,7 @@ import com.EduTech.model.Usuario;
 import java.util.Optional;
 
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mock; 
 import org.mockito.MockitoAnnotations;
 
 
@@ -64,64 +64,64 @@ class CursoServiceTest{
         assertEquals("Java Básico", resultado.get(0).getNombreCurso());
         verify(cursoRepository, times(1)).buscarTodosLosCursos();
     }
-
+    
     @Test
     void testAddNewCurso() {
+    
+    Roles rolProfesor = new Roles();
+    rolProfesor.setNombre("PROFESOR");
 
-        Roles rolProfesor = new Roles();
-        rolProfesor.setNombre("PROFESOR");
+    
+    Usuario profesor = new Usuario();
+    profesor.setId(1L);
+    profesor.setRoles(rolProfesor);
 
+    
+    Curso curso = new Curso();
+    curso.setIdCurso(1L);
+    curso.setNombreCurso("Spring Boot");
+    curso.setProfesor(profesor);
+        
 
-        Usuario profesor = new Usuario();
-        profesor.setId(1L);
-        profesor.setRoles(rolProfesor);
+    // Mockear la búsqueda del profesor
+    when(usuarioRepository.findById(1L)).thenReturn(java.util.Optional.of(profesor));
+    // Mockear el guardado del curso
+    when(cursoRepository.save(any(Curso.class))).thenReturn(curso);
 
+    
+    Curso resultado = cursoService.addNewCurso(curso);
 
-        Curso curso = new Curso();
-        curso.setIdCurso(1L);
-        curso.setNombreCurso("Spring Boot");
-        curso.setProfesor(profesor);
-
-
-        // Mockear la búsqueda del profesor
-        when(usuarioRepository.findById(1L)).thenReturn(java.util.Optional.of(profesor));
-        // Mockear el guardado del curso
-        when(cursoRepository.save(any(Curso.class))).thenReturn(curso);
-
-
-        Curso resultado = cursoService.addNewCurso(curso);
-
-        // Verificar resultados
-        assertNotNull(resultado);
-        assertEquals("Spring Boot", resultado.getNombreCurso());
-        verify(usuarioRepository, times(1)).findById(1L);
-        verify(cursoRepository, times(1)).save(any(Curso.class));
-    }
-    // ojo pendiente revision
-    @Test
-    void testAddNewCurso_SinProfesor_LanzaExcepcion() {
-        Curso curso = new Curso();
-        // No asignas profesor
-        Exception exception = assertThrows(RuntimeException.class, () -> cursoService.addNewCurso(curso));
-        assertEquals("Debe asignar un profesor al curso.", exception.getMessage());
-    }
+    // Verificar resultados
+    assertNotNull(resultado);
+    assertEquals("Spring Boot", resultado.getNombreCurso());
+    verify(usuarioRepository, times(1)).findById(1L);
+    verify(cursoRepository, times(1)).save(any(Curso.class));
+}
+// ojo pendiente revision 
+@Test
+void testAddNewCurso_SinProfesor_LanzaExcepcion() {
+    Curso curso = new Curso();
+    // No asignas profesor
+    Exception exception = assertThrows(RuntimeException.class, () -> cursoService.addNewCurso(curso));
+    assertEquals("Debe asignar un profesor al curso.", exception.getMessage());
+}
 
     @Test
     void testAddNewCurso_NoTieneRolProfesor() {
-        Usuario profesor = new Usuario();
-        profesor.setId(1L);
-        Roles rol = new Roles();
-        rol.setNombre("ESTUDIANTE"); // No es PROFESOR
-        profesor.setRoles(rol);
+    Usuario profesor = new Usuario();
+    profesor.setId(1L);
+    Roles rol = new Roles();
+    rol.setNombre("ESTUDIANTE"); // No es PROFESOR
+    profesor.setRoles(rol);
 
-        Curso curso = new Curso();
-        curso.setProfesor(profesor);
+    Curso curso = new Curso();
+    curso.setProfesor(profesor);
 
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(profesor));
+    when(usuarioRepository.findById(1L)).thenReturn(Optional.of(profesor));
 
-        Exception ex = assertThrows(RuntimeException.class, () -> cursoService.addNewCurso(curso));
-        assertEquals("El usuario asignado no tiene el rol de PROFESOR.", ex.getMessage());
-    }
+    Exception ex = assertThrows(RuntimeException.class, () -> cursoService.addNewCurso(curso));
+    assertEquals("El usuario asignado no tiene el rol de PROFESOR.", ex.getMessage());
+}
 
 
 
@@ -157,26 +157,26 @@ class CursoServiceTest{
 
     @Test
     void testActualizarCurso_IdCursoObligatorio() {
-        CursoDTO cursoDTO = new CursoDTO(); // No se asigna ID
-        String resultado = cursoService.actualizarCurso(cursoDTO);
-        assertEquals("Error: El ID del curso es obligatorio.", resultado);
+    CursoDTO cursoDTO = new CursoDTO(); // No se asigna ID
+    String resultado = cursoService.actualizarCurso(cursoDTO);
+    assertEquals("Error: El ID del curso es obligatorio.", resultado);
     }
 
     @Test
     void testActualizarCurso_CursoNoEncontrado() {
-        CursoDTO cursoDTO = new CursoDTO();
-        cursoDTO.setIdCurso(99L); // Un ID cualquiera
+    CursoDTO cursoDTO = new CursoDTO();
+    cursoDTO.setIdCurso(99L); // Un ID cualquiera
 
-        // Simula que el curso no existe en el repositorio
-        when(cursoRepository.findById(99L)).thenReturn(Optional.empty());
+    // Simula que el curso no existe en el repositorio
+    when(cursoRepository.findById(99L)).thenReturn(Optional.empty());
 
-        String resultado = cursoService.actualizarCurso(cursoDTO);
+    String resultado = cursoService.actualizarCurso(cursoDTO);
 
-        assertEquals("Error: Curso con ID 99 no encontrado.", resultado);
+    assertEquals("Error: Curso con ID 99 no encontrado.", resultado);
     }
 
 
-
+    
 
     @Test
     void testdeleteCurso(){
@@ -190,14 +190,14 @@ class CursoServiceTest{
 
     @Test
     void testDeleteCurso_CursoNoEncontrado() {
-        Long idCurso = 123L;
+    Long idCurso = 123L;
 
-        // Simula que el curso NO existe
-        when(cursoRepository.existsById(idCurso)).thenReturn(false);
+    // Simula que el curso NO existe
+    when(cursoRepository.existsById(idCurso)).thenReturn(false);
 
-        String resultado = cursoService.deleteCurso(idCurso);
+    String resultado = cursoService.deleteCurso(idCurso);
 
-        assertEquals("No se encuentra curso especificado.", resultado);
+    assertEquals("No se encuentra curso especificado.", resultado);
     }
 
 
@@ -222,14 +222,14 @@ class CursoServiceTest{
 
     @Test
     void testRemoverProfesorDeCurso_CursoNoEncontrado() {
-        Long idCurso = 123L;
+    Long idCurso = 123L;
 
-        // Simula que el curso NO existe
-        when(cursoRepository.findById(idCurso)).thenReturn(Optional.empty());
+    // Simula que el curso NO existe
+    when(cursoRepository.findById(idCurso)).thenReturn(Optional.empty());
 
-        String resultado = cursoService.removerProfesorDeCurso(idCurso);
+    String resultado = cursoService.removerProfesorDeCurso(idCurso);
 
-        assertEquals("Curso no encontrado.", resultado);
+    assertEquals("Curso no encontrado.", resultado);
     }
 
 
@@ -237,7 +237,7 @@ class CursoServiceTest{
     void testasignarProfesorACurso(){
         Long cursoId = 1L;
         Long profesorId = 2L;
-
+        
         Curso curso = new Curso();
 
         curso.setIdCurso(cursoId);
@@ -255,8 +255,8 @@ class CursoServiceTest{
         curso.setProfesor(profesor);
         when(cursoRepository.save(curso)).thenReturn(curso);
         // Llamar al método de servicio
-
-
+        
+        
         String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
         assertEquals("Profesor asignado al curso correctamente.", resultado);
         verify(cursoRepository, times(1)).findById(cursoId);
@@ -266,56 +266,56 @@ class CursoServiceTest{
 
     @Test
     void testAsignarProfesorACurso_CursoNoEncontrado() {
-        Long cursoId = 1L;
-        Long profesorId = 2L;
+    Long cursoId = 1L;
+    Long profesorId = 2L;
 
-        // Simula que el curso NO existe
-        when(cursoRepository.findById(cursoId)).thenReturn(Optional.empty());
+    // Simula que el curso NO existe
+    when(cursoRepository.findById(cursoId)).thenReturn(Optional.empty());
 
-        String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
+    String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
 
-        assertEquals("Curso no encontrado.", resultado);
+    assertEquals("Curso no encontrado.", resultado);
     }
 
     @Test
     void testAsignarProfesorACurso_ProfesorNoEncontrado() {
-        Long cursoId = 1L;
-        Long profesorId = 2L;
+    Long cursoId = 1L;
+    Long profesorId = 2L;
 
-        // Simula que el curso SÍ existe
-        Curso curso = new Curso();
-        curso.setIdCurso(cursoId);
-        when(cursoRepository.findById(cursoId)).thenReturn(Optional.of(curso));
+    // Simula que el curso SÍ existe
+    Curso curso = new Curso();
+    curso.setIdCurso(cursoId);
+    when(cursoRepository.findById(cursoId)).thenReturn(Optional.of(curso));
 
-        // Simula que el profesor NO existe
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.empty());
+    // Simula que el profesor NO existe
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.empty());
 
-        String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
+    String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
 
-        assertEquals("Profesor no encontrado.", resultado);
+    assertEquals("Profesor no encontrado.", resultado);
     }
 
     @Test
     void testAsignarProfesorACurso_UsuarioSinRolProfesor() {
-        Long cursoId = 1L;
-        Long profesorId = 2L;
+    Long cursoId = 1L;
+    Long profesorId = 2L;
 
-        // Simula que el curso SÍ existe
-        Curso curso = new Curso();
-        curso.setIdCurso(cursoId);
-        when(cursoRepository.findById(cursoId)).thenReturn(Optional.of(curso));
+    // Simula que el curso SÍ existe
+    Curso curso = new Curso();
+    curso.setIdCurso(cursoId);
+    when(cursoRepository.findById(cursoId)).thenReturn(Optional.of(curso));
 
-        // Simula que el profesor SÍ existe pero NO tiene rol de PROFESOR
-        Usuario profesor = new Usuario();
-        profesor.setId(profesorId);
-        Roles rol = new Roles();
-        rol.setNombre("ESTUDIANTE"); // No es PROFESOR
-        profesor.setRoles(rol);
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
+    // Simula que el profesor SÍ existe pero NO tiene rol de PROFESOR
+    Usuario profesor = new Usuario();
+    profesor.setId(profesorId);
+    Roles rol = new Roles();
+    rol.setNombre("ESTUDIANTE"); // No es PROFESOR
+    profesor.setRoles(rol);
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
 
-        String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
+    String resultado = cursoService.asignarProfesorACurso(cursoId, profesorId);
 
-        assertEquals("El usuario no tiene el rol de Profesor.", resultado);
+    assertEquals("El usuario no tiene el rol de Profesor.", resultado);
     }
 
 
@@ -323,144 +323,308 @@ class CursoServiceTest{
     @Test
     void testReemplazarCursosDeProfesor_CasoExitoso() {
         Curso curso1 = new Curso();
-        curso1.setIdCurso(10L);
-        Curso curso2 = new Curso();
-        curso2.setIdCurso(20L);
+    curso1.setIdCurso(10L);
+    Curso curso2 = new Curso();
+    curso2.setIdCurso(20L);
 
-        when(cursoRepository.findById(10L)).thenReturn(Optional.of(curso1));
-        when(cursoRepository.findById(20L)).thenReturn(Optional.of(curso2));
-        Long profesorId = 1L;
-        Roles rolProfesor = new Roles();
-        rolProfesor.setNombre("PROFESOR");
-        Usuario profesor = new Usuario();
-        profesor.setId(profesorId);
-        profesor.setRoles(rolProfesor);
+    when(cursoRepository.findById(10L)).thenReturn(Optional.of(curso1));
+    when(cursoRepository.findById(20L)).thenReturn(Optional.of(curso2));
+    Long profesorId = 1L;
+    Roles rolProfesor = new Roles();
+    rolProfesor.setNombre("PROFESOR");
+    Usuario profesor = new Usuario();
+    profesor.setId(profesorId);
+    profesor.setRoles(rolProfesor);
 
-        List<Long> idsCursos = Arrays.asList(10L, 20L);
+    List<Long> idsCursos = Arrays.asList(10L, 20L);
 
-        when(usuarioRepository.findById(profesorId)).thenReturn(java.util.Optional.of(profesor));
+    when(usuarioRepository.findById(profesorId)).thenReturn(java.util.Optional.of(profesor));
 
-        // Llama al método (no debe lanzar excepción)
-        assertDoesNotThrow(() -> cursoService.reemplazarCursosDeProfesor(profesorId, idsCursos));
+    // Llama al método (no debe lanzar excepción)
+    assertDoesNotThrow(() -> cursoService.reemplazarCursosDeProfesor(profesorId, idsCursos));
 
-        verify(usuarioRepository, times(1)).findById(profesorId);
+    verify(usuarioRepository, times(1)).findById(profesorId);
     }
 
     @Test
     void testReemplazarCursosDeProfesor_UsuarioSinRolProfesor() {
-        Long profesorId = 1L;
-        List<Long> idsCursos = Arrays.asList(10L, 20L);
+    Long profesorId = 1L;
+    List<Long> idsCursos = Arrays.asList(10L, 20L);
 
-        // Simula que el profesor SÍ existe pero NO tiene rol de PROFESOR
-        Usuario profesor = new Usuario();
-        profesor.setId(profesorId);
-        Roles rol = new Roles();
-        rol.setNombre("ESTUDIANTE");
-        profesor.setRoles(rol);
+    // Simula que el profesor SÍ existe pero NO tiene rol de PROFESOR
+    Usuario profesor = new Usuario();
+    profesor.setId(profesorId);
+    Roles rol = new Roles();
+    rol.setNombre("ESTUDIANTE"); 
+    profesor.setRoles(rol);
 
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                cursoService.reemplazarCursosDeProfesor(profesorId, idsCursos)
-        );
-        assertEquals("El usuario no tiene rol de Profesor", exception.getMessage());
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> 
+        cursoService.reemplazarCursosDeProfesor(profesorId, idsCursos)
+    );
+    assertEquals("El usuario no tiene rol de Profesor", exception.getMessage());
     }
 
 
     @Test
     void testModificarCursosDeProfesor_ProfesorNoEncontrado() {
-        Long profesorId = 1L;
-        CursoPatchDTO dto = new CursoPatchDTO();
+    Long profesorId = 1L;
+    CursoPatchDTO dto = new CursoPatchDTO();
 
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.empty());
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                cursoService.modificarCursosDeProfesor(profesorId, dto)
-        );
-        assertEquals("Profesor no encontrado", exception.getMessage());
+    RuntimeException exception = assertThrows(RuntimeException.class, () ->
+        cursoService.modificarCursosDeProfesor(profesorId, dto)
+    );
+    assertEquals("Profesor no encontrado", exception.getMessage());
     }
 
     @Test
     void testModificarCursosDeProfesor_UsuarioNoEsProfesor() {
-        Long profesorId = 1L;
-        CursoPatchDTO dto = new CursoPatchDTO();
+    Long profesorId = 1L;
+    CursoPatchDTO dto = new CursoPatchDTO();
 
-        Usuario usuario = new Usuario();
-        usuario.setId(profesorId);
-        Roles rol = new Roles();
-        rol.setNombre("ESTUDIANTE"); // No es PROFESOR
-        usuario.setRoles(rol);
+    Usuario usuario = new Usuario();
+    usuario.setId(profesorId);
+    Roles rol = new Roles();
+    rol.setNombre("ESTUDIANTE"); // No es PROFESOR
+    usuario.setRoles(rol);
 
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(usuario));
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(usuario));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                cursoService.modificarCursosDeProfesor(profesorId, dto)
-        );
-        assertEquals("El usuario no es un profesor", exception.getMessage());
+    RuntimeException exception = assertThrows(RuntimeException.class, () ->
+        cursoService.modificarCursosDeProfesor(profesorId, dto)
+    );
+    assertEquals("El usuario no es un profesor", exception.getMessage());
     }
 
     @Test
     void testModificarCursosDeProfesor_AgregarCursos() {
-        Long profesorId = 1L;
-        Usuario profesor = new Usuario();
-        profesor.setId(profesorId);
-        Roles rol = new Roles();
-        rol.setNombre("PROFESOR");
-        profesor.setRoles(rol);
+    Long profesorId = 1L;
+    Usuario profesor = new Usuario();
+    profesor.setId(profesorId);
+    Roles rol = new Roles();
+    rol.setNombre("PROFESOR");
+    profesor.setRoles(rol);
 
-        CursoPatchDTO dto = new CursoPatchDTO();
-        List<Long> idsAgregar = Arrays.asList(10L, 20L);
-        dto.setIdsAgregar(idsAgregar);
+    CursoPatchDTO dto = new CursoPatchDTO();
+    List<Long> idsAgregar = Arrays.asList(10L, 20L);
+    dto.setIdsAgregar(idsAgregar);
 
-        Curso curso1 = new Curso();
-        curso1.setIdCurso(10L);
-        Curso curso2 = new Curso();
-        curso2.setIdCurso(20L);
+    Curso curso1 = new Curso();
+    curso1.setIdCurso(10L);
+    Curso curso2 = new Curso();
+    curso2.setIdCurso(20L);
 
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
-        when(cursoRepository.findAllById(idsAgregar)).thenReturn(Arrays.asList(curso1, curso2));
-        when(cursoRepository.save(any(Curso.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
+    when(cursoRepository.findAllById(idsAgregar)).thenReturn(Arrays.asList(curso1, curso2));
+    when(cursoRepository.save(any(Curso.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        cursoService.modificarCursosDeProfesor(profesorId, dto);
+    cursoService.modificarCursosDeProfesor(profesorId, dto);
 
-        // Verifica que se asignó el profesor y se guardó cada curso
-        assertEquals(profesor, curso1.getProfesor());
-        assertEquals(profesor, curso2.getProfesor());
-        verify(cursoRepository, times(2)).save(any(Curso.class));
+    // Verifica que se asignó el profesor y se guardó cada curso
+    assertEquals(profesor, curso1.getProfesor());
+    assertEquals(profesor, curso2.getProfesor());
+    verify(cursoRepository, times(2)).save(any(Curso.class));
     }
 
     @Test
     void testModificarCursosDeProfesor_EliminarCursos() {
-        Long profesorId = 1L;
-        Usuario profesor = new Usuario();
-        profesor.setId(profesorId);
-        Roles rol = new Roles();
-        rol.setNombre("PROFESOR");
-        profesor.setRoles(rol);
+    Long profesorId = 1L;
+    Usuario profesor = new Usuario();
+    profesor.setId(profesorId);
+    Roles rol = new Roles();
+    rol.setNombre("PROFESOR");
+    profesor.setRoles(rol);
 
-        CursoPatchDTO dto = new CursoPatchDTO();
-        List<Long> idsEliminar = Arrays.asList(30L, 40L);
-        dto.setIdsEliminar(idsEliminar);
+    CursoPatchDTO dto = new CursoPatchDTO();
+    List<Long> idsEliminar = Arrays.asList(30L, 40L);
+    dto.setIdsEliminar(idsEliminar);
 
-        Curso curso1 = new Curso();
-        curso1.setIdCurso(30L);
-        curso1.setProfesor(profesor); // El curso tiene asignado al profesor
-        Curso curso2 = new Curso();
-        curso2.setIdCurso(40L);
-        curso2.setProfesor(profesor); // El curso tiene asignado al profesor
+    Curso curso1 = new Curso();
+    curso1.setIdCurso(30L);
+    curso1.setProfesor(profesor); // El curso tiene asignado al profesor
+    Curso curso2 = new Curso();
+    curso2.setIdCurso(40L);
+    curso2.setProfesor(profesor); // El curso tiene asignado al profesor
 
-        when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
-        when(cursoRepository.findAllById(idsEliminar)).thenReturn(Arrays.asList(curso1, curso2));
-        when(cursoRepository.save(any(Curso.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(usuarioRepository.findById(profesorId)).thenReturn(Optional.of(profesor));
+    when(cursoRepository.findAllById(idsEliminar)).thenReturn(Arrays.asList(curso1, curso2));
+    when(cursoRepository.save(any(Curso.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        cursoService.modificarCursosDeProfesor(profesorId, dto);
+    cursoService.modificarCursosDeProfesor(profesorId, dto);
 
-        // Verifica que se quitó el profesor y se guardó cada curso
-        assertNull(curso1.getProfesor());
-        assertNull(curso2.getProfesor());
-        verify(cursoRepository, times(2)).save(any(Curso.class));
+    // Verifica que se quitó el profesor y se guardó cada curso
+    assertNull(curso1.getProfesor());
+    assertNull(curso2.getProfesor());
+    verify(cursoRepository, times(2)).save(any(Curso.class));
     }
 
+    @Test
+    void inscribirEstudianteACurso_CursoNoEncontrado (){
 
+        Curso curso = new Curso();
+        curso.setIdCurso(99L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Curso no encontrado", ex.getMessage());
+
+        verify(cursoRepository, times(1)).findById(curso.getIdCurso());
+    }
+
+    @Test
+    void inscribirEstudianteACurso_UsuarioNoEncontrado(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Usuario no encontrado", ex.getMessage());
+
+        verify(usuarioRepository, times(1)).findById(usuario.getId());
+    }
+
+    @Test
+    void removerEstudianteACurso_CursoNoEncontrado (){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(99L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Curso no encontrado", ex.getMessage());
+
+        verify(cursoRepository, times(1)).findById(curso.getIdCurso());
+    }
+
+    @Test
+    void removerEstudianteACurso_UsuarioNoEncontrado(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Usuario no encontrado", ex.getMessage());
+
+        verify(usuarioRepository, times(1)).findById(usuario.getId());
+    }
+
+    @Test
+    void inscribirEstudianteACurso_UsuarioNulo(){
+        Long idCurso = 1L;
+        Long idUsuario = null;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del usuario no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void inscribirEstudianteACurso_CursoNulo(){
+        Long idCurso = null;
+        Long idUsuario = 1L;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del curso no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void removerEstudianteACurso_UsuarioNulo(){
+        Long idCurso = 1L;
+        Long idUsuario = null;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del usuario no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void removerEstudianteACurso_CursoNulo(){
+        Long idCurso = null;
+        Long idUsuario = 1L;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del curso no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void removerEstudianteACurso(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        String resultado = cursoService.removerEstudiantedeCurso(curso.getIdCurso(), usuario.getId());
+
+        assertNotNull(resultado);
+        assertEquals("Estudiante removido correctamente", resultado);
+        assertFalse(curso.getEstudiantes().contains(usuario));
+        verify(cursoRepository, times(1)).save(curso);
+    }
+
+    @Test
+    void inscribirEstudianteACurso(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        String resultado = cursoService.inscribirEstudianteACurso(curso.getIdCurso(), usuario.getId());
+
+        assertNotNull(resultado);
+        assertEquals("Estudiante inscrito correctamente al curso.", resultado);
+        assertTrue(curso.getEstudiantes().contains(usuario));
+        verify(cursoRepository, times(1)).save(curso);
+    }
 
 }

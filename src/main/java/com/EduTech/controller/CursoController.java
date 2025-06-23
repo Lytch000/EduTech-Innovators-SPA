@@ -1,6 +1,6 @@
 // Victor garces
 package com.EduTech.controller;
-
+ 
 import com.EduTech.dto.cursoDTO.CursoDTO;
 import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.model.Curso;
@@ -20,8 +20,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Cursos", description = "Operaciones relacionadas con la gestión de cursos")
 @RestController
 @RequestMapping("api/v1/cursos")
 @Tag(name = "Cursos" , description = "Operaciones relacionados con cursos")
@@ -176,8 +183,18 @@ public class CursoController {
     }
 
     //Autor Juan Olguin
+    @Operation(
+        summary = "Inscribir estudiante en un curso",
+        description = "Permite inscribir un estudiante existente en un curso existente usando sus IDs."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Estudiante inscrito correctamente al curso."),
+        @ApiResponse(responseCode = "400", description = "Error de validación o datos incorrectos.")
+    })
     @PutMapping("/inscribirEstudiante/{idCurso}/{idUsuario}")
-    public ResponseEntity<String> inscribirEstudiante(@PathVariable Long idCurso, @PathVariable Long idUsuario) {
+    public ResponseEntity<String> inscribirEstudiante(
+        @Parameter(description = "ID del curso", required = true) @PathVariable Long idCurso,
+        @Parameter(description = "ID del usuario (estudiante)", required = true) @PathVariable Long idUsuario) {
         try {
             String mensaje = cursoService.inscribirEstudianteACurso(idCurso, idUsuario);
             return ResponseEntity.ok(mensaje);
@@ -187,8 +204,18 @@ public class CursoController {
     }
 
     //Autor Juan Olguin
+    @Operation(
+        summary = "Remover estudiante de un curso",
+        description = "Permite remover a un estudiante de un curso usando sus IDs."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Estudiante removido correctamente"),
+        @ApiResponse(responseCode = "400", description = "Error de validación o datos incorrectos.")
+    })
     @PutMapping("/removerEstudiante/{idCurso}/{idUsuario}")
-    public ResponseEntity<String> removerEstudiante(@PathVariable Long idCurso, @PathVariable Long idUsuario){
+    public ResponseEntity<String> removerEstudiante(
+        @Parameter(description = "ID del curso", required = true) @PathVariable Long idCurso,
+        @Parameter(description = "ID del usuario (estudiante)", required = true) @PathVariable Long idUsuario) {
         try {
             String mensaje = cursoService.removerEstudiantedeCurso(idCurso, idUsuario);
             return ResponseEntity.ok(mensaje);
