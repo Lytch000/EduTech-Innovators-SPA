@@ -10,7 +10,7 @@ import com.EduTech.model.Usuario;
 import java.util.Optional;
 
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mock; 
 import org.mockito.MockitoAnnotations;
 
 
@@ -461,6 +461,170 @@ void testAddNewCurso_SinProfesor_LanzaExcepcion() {
     verify(cursoRepository, times(2)).save(any(Curso.class));
     }
 
-    
+    @Test
+    void inscribirEstudianteACurso_CursoNoEncontrado (){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(99L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Curso no encontrado", ex.getMessage());
+
+        verify(cursoRepository, times(1)).findById(curso.getIdCurso());
+    }
+
+    @Test
+    void inscribirEstudianteACurso_UsuarioNoEncontrado(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Usuario no encontrado", ex.getMessage());
+
+        verify(usuarioRepository, times(1)).findById(usuario.getId());
+    }
+
+    @Test
+    void removerEstudianteACurso_CursoNoEncontrado (){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(99L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Curso no encontrado", ex.getMessage());
+
+        verify(cursoRepository, times(1)).findById(curso.getIdCurso());
+    }
+
+    @Test
+    void removerEstudianteACurso_UsuarioNoEncontrado(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(curso.getIdCurso(), usuario.getId())
+        );
+        assertEquals("Usuario no encontrado", ex.getMessage());
+
+        verify(usuarioRepository, times(1)).findById(usuario.getId());
+    }
+
+    @Test
+    void inscribirEstudianteACurso_UsuarioNulo(){
+        Long idCurso = 1L;
+        Long idUsuario = null;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del usuario no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void inscribirEstudianteACurso_CursoNulo(){
+        Long idCurso = null;
+        Long idUsuario = 1L;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.inscribirEstudianteACurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del curso no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void removerEstudianteACurso_UsuarioNulo(){
+        Long idCurso = 1L;
+        Long idUsuario = null;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del usuario no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void removerEstudianteACurso_CursoNulo(){
+        Long idCurso = null;
+        Long idUsuario = 1L;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+        cursoService.removerEstudiantedeCurso(idCurso, idUsuario)
+    );
+    assertEquals("El id del curso no puede ser nulo", ex.getMessage());
+
+    }
+
+    @Test
+    void removerEstudianteACurso(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(99L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        String resultado = cursoService.removerEstudiantedeCurso(curso.getIdCurso(), usuario.getId());
+
+        assertNotNull(resultado);
+        assertEquals("Estudiante removido correctamente", resultado);
+        assertFalse(curso.getEstudiantes().contains(usuario));
+        verify(cursoRepository, times(1)).save(curso);
+    }
+
+    @Test
+    void inscribirEstudianteACurso(){
+
+        Curso curso = new Curso();
+        curso.setIdCurso(1L);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        
+        when(cursoRepository.findById(curso.getIdCurso())).thenReturn(Optional.of(curso));
+        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        String resultado = cursoService.inscribirEstudianteACurso(curso.getIdCurso(), usuario.getId());
+
+        assertNotNull(resultado);
+        assertEquals("Estudiante inscrito correctamente al curso.", resultado);
+        assertTrue(curso.getEstudiantes().contains(usuario));
+        verify(cursoRepository, times(1)).save(curso);
+    }
 
 }
