@@ -5,6 +5,10 @@ import com.EduTech.dto.cursoDTO.CursoPatchDTO;
 import com.EduTech.dto.cursoDTO.ProfesorDetalleCursoDTO;
 import com.EduTech.dto.user.LoginRequest;
 import com.EduTech.service.UsuarioService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import com.EduTech.dto.user.CrearUsuarioDto;
 import com.EduTech.dto.user.RespuestaUsuarioDto;
 import com.EduTech.dto.user.ActualizarUsuarioDto;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -85,7 +90,17 @@ public class UsuarioController {
     //Autor Victor Garces
     // es el cual me permitira ingresar el id del profesor y me listara los cursos asignados previamente
     @GetMapping("/profesor/detalle/{id}")
-    public ResponseEntity<?> obtenerDetalleProfesor(@PathVariable Long id) {
+    @Operation(
+    summary = "Obtener detalle de profesor con cursos asignados",
+    description = "Devuelve la información del profesor y la lista de cursos que tiene asignados.",
+    responses = {
+        @ApiResponse(responseCode = "200", description = "Detalle del profesor obtenido correctamente"),
+        @ApiResponse(responseCode = "404", description = "Profesor no encontrado")
+    }
+)
+    public ResponseEntity<?> obtenerDetalleProfesor(
+    @Parameter(description = "ID del profesor", required = true, example = "1")    
+    @PathVariable Long id) {
         try {
             ProfesorDetalleCursoDTO detalle = service.obtenerDetalleProfesorConCursos(id);
             return ResponseEntity.ok(detalle);
