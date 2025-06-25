@@ -156,6 +156,10 @@ public class CursoService {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
+        if (!curso.getEstudiantes().contains(usuario)) {
+            return "El estudiante no está inscrito en el curso.";
+        }
+
         curso.getEstudiantes().remove(usuario);
         cursoRepository.save(curso);
 

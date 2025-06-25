@@ -1,6 +1,7 @@
 package com.EduTech.controller;
 
 import com.EduTech.assemblers.RolesAssembler;
+import com.EduTech.dto.MensajeDTO;
 import com.EduTech.dto.roles.RolesDTO;
 import com.EduTech.model.Roles;
 import com.EduTech.service.RolesService;
@@ -104,8 +105,25 @@ public class RolesControllerV2 {
         }
     )
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteRol(@PathVariable Long id) {
-        return ResponseEntity.ok(rolesService.deleteRol(id));
+    public ResponseEntity<?> deleteRol(@PathVariable Long id) {
+        String mensaje = rolesService.deleteRol(id);
+
+        MensajeDTO mensajeDTO = new MensajeDTO(mensaje);
+
+        if ("No se encuentra rol especificado".equals(mensaje)) {
+            EntityModel<MensajeDTO> errorModel = EntityModel.of(
+                mensajeDTO,
+                linkTo(methodOn(RolesControllerV2.class).listar()).withRel("roles")
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorModel);
+        }
+
+        EntityModel<MensajeDTO> model = EntityModel.of(
+            mensajeDTO,
+            linkTo(methodOn(RolesControllerV2.class).listar()).withRel("roles"),
+            linkTo(methodOn(RolesControllerV2.class).addNewRol(null)).withRel("crear")
+        );
+        return ResponseEntity.ok(model);
     }
 
     /**
@@ -123,11 +141,23 @@ public class RolesControllerV2 {
         }
     )
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateRol(@PathVariable Long id, @RequestBody Roles rol) {
+    public ResponseEntity<?> updateRol(@PathVariable Long id, @RequestBody Roles rol) {
         String resultado = rolesService.updateRol(id, rol);
+        MensajeDTO mensajeDTO = new MensajeDTO(resultado);
+
         if ("No se encuentra rol indicado".equals(resultado)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultado);
+            EntityModel<MensajeDTO> errorModel = EntityModel.of(
+                mensajeDTO,
+                linkTo(methodOn(RolesControllerV2.class).listar()).withRel("roles")
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorModel);
         }
-        return ResponseEntity.ok(resultado);
+
+        EntityModel<MensajeDTO> model = EntityModel.of(
+            mensajeDTO,
+            linkTo(methodOn(RolesControllerV2.class).listar()).withRel("roles"),
+            linkTo(methodOn(RolesControllerV2.class).addNewRol(null)).withRel("crear")
+        );
+        return ResponseEntity.ok(model);
     }
 }
