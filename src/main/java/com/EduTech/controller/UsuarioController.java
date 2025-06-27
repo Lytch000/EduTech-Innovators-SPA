@@ -76,7 +76,19 @@ public class UsuarioController {
         }
     }
 
-    //Autor Juan Olguin
+    /**
+     * Endpoint para login de usuario.
+     * @param request DTO con email y password.
+     * @return Usuario autenticado o error de credenciales.
+     */
+    @Operation(
+        summary = "Login de usuario",
+        description = "Permite autenticar un usuario con email y contraseña.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Login exitoso"),
+            @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
+        }
+    )
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
