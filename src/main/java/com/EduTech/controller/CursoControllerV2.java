@@ -90,7 +90,17 @@ public class CursoControllerV2 {
     // Métodos de feature/victor-v6 ---------------------
 
     @GetMapping()
-    @Operation(summary = "Obtener los cursos", description = "Obtiene una lista de todos los cursos")
+    @Operation(
+            summary = "Obtener los cursos",
+            description = "Obtiene una lista de todos los cursos con enlaces HATEOAS",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Cursos encontrados satisfactoriamente",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(responseCode = "204", description = "No hay cursos disponibles"),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            }
+    )
     public ResponseEntity<CollectionModel<EntityModel<CursoDTO>>> listar() {
         List<CursoDTO> cursos = cursoService.listar();
         if (cursos.isEmpty()) {
@@ -108,7 +118,22 @@ public class CursoControllerV2 {
     }
 
     @PostMapping()
-    @Operation(summary = "Agregar un nuevo curso", description = "Crea un nuevo curso y lo guarda en la base de datos")
+    @Operation(
+            summary = "Agregar un nuevo curso",
+            description = "Crea un nuevo curso y devuelve el curso creado con enlaces HATEOAS",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Curso a ser creado",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = Curso.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Curso creado correctamente",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Datos inválidos"),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            }
+    )
     public ResponseEntity<EntityModel<CursoDTO>> addNewCurso(@RequestBody Curso curso) {
         Curso cursoCreado = cursoService.addNewCurso(curso);
         CursoDTO cursoDTO = new CursoDTO(cursoCreado);
@@ -116,8 +141,27 @@ public class CursoControllerV2 {
         return ResponseEntity.ok(recurso);
     }
 
+
     @DeleteMapping("/delete/{idCurso}")
-    @Operation(summary = "Eliminar un curso", description = "Elimina un curso por su ID")
+    @Operation(
+            summary = "Eliminar un curso",
+            description = "Elimina un curso por su ID y devuelve un mensaje con enlaces HATEOAS",
+            parameters = {
+                    @Parameter(
+                            name = "idCurso",
+                            description = "ID del curso a eliminar",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Curso eliminado correctamente",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Curso no encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            }
+    )
     public ResponseEntity<EntityModel<Map<String, String>>> deleteCurso(@PathVariable Long idCurso) {
         String resultado = cursoService.deleteCurso(idCurso);
         Map<String, String> body = Map.of("mensaje", resultado);
@@ -132,8 +176,35 @@ public class CursoControllerV2 {
             : ResponseEntity.status(HttpStatus.NOT_FOUND).body(recurso);
     }
 
+
+
     @PutMapping("/remover-profesor/{idCurso}")
-    @Operation(summary = "Remover profesor de un curso", description = "Elimina la asignación de profesor de un curso por su ID.")
+    @Operation(
+            summary = "Remover profesor de un curso",
+            description = "Elimina la asignación de profesor de un curso por su ID y devuelve un mensaje con enlaces HATEOAS",
+            parameters = {
+                    @Parameter(
+                            name = "idCurso",
+                            description = "ID del curso del que se removerá el profesor",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Profesor removido correctamente",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(
+                                            implementation = Map.class,
+                                            description = "{ \"message\": \"Profesor removido exitosamente.\" }"
+                                    )
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "El curso no tiene profesor asignado"),
+                    @ApiResponse(responseCode = "404", description = "Curso no encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            }
+    )
     public ResponseEntity<EntityModel<Map<String, String>>> removerProfesor(@PathVariable Long idCurso) {
         try {
             String mensaje = cursoService.removerProfesorDeCurso(idCurso);
@@ -148,7 +219,34 @@ public class CursoControllerV2 {
     }
 
     @PutMapping("/asignar-profesor/{idCurso}/{idUsuario}")
-    @Operation(summary = "Asignar profesor a un curso", description = "Asigna un profesor (usuario) a un curso específico.")
+    @Operation(
+            summary = "Asignar profesor a un curso",
+            description = "Asigna un profesor (usuario) a un curso específico y devuelve un mensaje con enlaces HATEOAS",
+            parameters = {
+                    @Parameter(
+                            name = "idCurso",
+                            description = "ID del curso al que se asignará el profesor",
+                            required = true,
+                            example = "1"
+                    ),
+                    @Parameter(
+                            name = "idUsuario",
+                            description = "ID del profesor (usuario) que se asignará al curso",
+                            required = true,
+                            example = "5"
+                    )
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Profesor asignado correctamente",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Map.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Curso o profesor no encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Error al asignar el profesor")
+            }
+    )
     public ResponseEntity<EntityModel<Map<String, String>>> asignarProfesor(@PathVariable Long idCurso, @PathVariable Long idUsuario) {
         try {
             String mensaje = cursoService.asignarProfesorACurso(idCurso, idUsuario);
@@ -163,7 +261,39 @@ public class CursoControllerV2 {
     }
 
     @PutMapping()
-    @Operation(summary = "Actualizar un curso", description = "Actualiza los datos de un curso existente usando su ID.")
+    @Operation(
+            summary = "Actualizar un curso",
+            description = "Actualiza los datos de un curso existente usando su ID. Devuelve un mensaje con enlaces HATEOAS",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Datos del curso a actualizar. El campo 'idCurso' es obligatorio.",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CursoDTO.class),
+                            examples = @ExampleObject(
+                                    value = "{\n" +
+                                            "  \"idCurso\": 1,\n" +
+                                            "  \"nombreCurso\": \"Matemáticas\",\n" +
+                                            "  \"descripcion\": \"Curso de matemáticas básicas\",\n" +
+                                            "  \"categoria\": \"Ciencias\",\n" +
+                                            "  \"horasDuracion\": 40,\n" +
+                                            "  \"precioCurso\": 100.0,\n" +
+                                            "  \"fechaPublicacion\": \"2024-06-21T00:00:00.000+00:00\"\n" +
+                                            "}"
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Curso actualizado correctamente",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Map.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "ID del curso es obligatorio"),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            }
+    )
     public ResponseEntity<EntityModel<Map<String, String>>> actualizarCurso(@RequestBody CursoDTO cursoDTO) {
         if (cursoDTO.getIdCurso() == null) {
             Map<String, String> body = Map.of("message", "Error: ID del curso es obligatorio.");
@@ -182,15 +312,66 @@ public class CursoControllerV2 {
         }
     }
 
+    // No logre incorporar el hateoas en este endpoint considerar
     @PutMapping("/cursos/{idProfesor}")
-    @Operation(summary = "Reemplazar cursos de un profesor", description = "Reemplaza todos los cursos asignados a un profesor por un nuevo conjunto de cursos.")
+    @Operation(
+            summary = "Reemplazar cursos de un profesor",
+            description = "Reemplaza todos los cursos asignados a un profesor por un nuevo conjunto de cursos.",
+            parameters = {
+                    @Parameter(
+                            name = "idProfesor",
+                            description = "ID del profesor",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Lista de IDs de cursos que se asignarán al profesor",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(type = "integer", example = "10")
+                            ),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Lista de cursos",
+                                            summary = "Ejemplo de IDs de cursos",
+                                            value = "[10, 20, 30]"
+                                    )
+                            }
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Cursos actualizados correctamente",
+                            content = @Content(mediaType = "text/plain")
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Datos inválidos"),
+                    @ApiResponse(responseCode = "404", description = "Profesor o curso no encontrado"),
+                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            }
+    )
     public ResponseEntity<String> reemplazarCursos(@PathVariable Long idProfesor, @RequestBody List<Long> idsCursos) {
         cursoService.reemplazarCursosDeProfesor(idProfesor, idsCursos);
         return ResponseEntity.ok("Cursos actualizados");
     }
 
+// No logre el hateoas en este endpoint
     @PatchMapping("/cursos/{idProfesor}")
-    @Operation(summary = "Modificar cursos de un profesor", description = "Agrega o elimina cursos asignados a un profesor según los IDs enviados.")
+    @Operation(
+            summary = "Modificar cursos de un profesor",
+            description = """
+        Agrega o elimina cursos asignados a un profesor según los IDs enviados.  
+        La respuesta incluye enlaces HATEOAS con recursos relacionados, como el detalle del profesor,
+        los cursos actuales y la lista completa de cursos disponibles.
+        """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Cursos modificados correctamente con enlaces HATEOAS"),
+                    @ApiResponse(responseCode = "404", description = "Profesor o curso no encontrado"),
+                    @ApiResponse(responseCode = "400", description = "Datos inválidos")
+            }
+    )
+
     public ResponseEntity<String> modificarCursos(@PathVariable Long idProfesor, @RequestBody CursoPatchDTO dto) {
         cursoService.modificarCursosDeProfesor(idProfesor, dto);
         return ResponseEntity.ok("Cursos modificados correctamente");

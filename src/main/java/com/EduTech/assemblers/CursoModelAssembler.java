@@ -19,22 +19,7 @@ public class CursoModelAssembler implements RepresentationModelAssembler<CursoDT
             linkTo(methodOn(CursoControllerV2.class).asignarProfesor(curso.getIdCurso(), null)).withRel("asignarProfesor"),
             linkTo(methodOn(CursoControllerV2.class).actualizarCurso(null)).withRel("actualizar")
 
-               // linkTo(methodOn(CursoControllerV2.class).listar()).withRel("cursos"),
-               // linkTo(CursoControllerV2.class)
-           // .slash("delete")
-            //.slash(curso.getIdCurso())
-            //.withRel("eliminar"),
-            //linkTo(CursoControllerV2.class)
-            //.slash("remover-profesor")
-            //.slash(curso.getIdCurso())
-            //.withRel("removerProfesor"),
-           // linkTo(CursoControllerV2.class)
-            //.slash("asignar-profesor")
-            //.slash(curso.getIdCurso())
-            //.slash("{idUsuario}") 
-            //.withRel("asignarProfesor"),
-            //linkTo(CursoControllerV2.class)
-            //.withRel("actualizar")
+
         );
     }
 

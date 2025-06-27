@@ -25,6 +25,7 @@ public class UsuariosAssembler implements RepresentationModelAssembler<UsuarioDT
         return EntityModel.of(
             usuarioDTO,
             linkTo(methodOn(UsuarioControllerV2.class).login(new LoginRequest())).withRel("login")
+
         );
     }
 }
