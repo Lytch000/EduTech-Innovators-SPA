@@ -61,6 +61,4 @@ public class RespuestaUsuarioDto {
 
     @Schema(description = "Fecha de nacimiento del usuario", example = "1990-01-01")
     private Date birthDate;
-
-    // Constructores...
 }

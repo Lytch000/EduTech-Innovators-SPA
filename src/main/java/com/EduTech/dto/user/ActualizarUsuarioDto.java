@@ -11,7 +11,6 @@ import lombok.Data;
  */
 @Data
 public class ActualizarUsuarioDto {
-
     @Schema(description = "Número de teléfono del usuario", example = "987654321")
     private Long phoneNumber;
 

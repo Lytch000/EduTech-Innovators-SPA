@@ -16,6 +16,7 @@ import lombok.Data;
 @Data
 @Schema(description = "DTO para representar los datos de un permiso")
 public class PermisoDto {
+    public PermisoDto() {}
 
     /**
      * Constructor que transforma una entidad Permiso en un PermisoDto.
