@@ -28,6 +28,16 @@ public class UsuarioDTO {
         this.birthDate = user.getBirthDate();
     }
 
+    public UsuarioDTO(RespuestaUsuarioDto user) {
+        this.id = user.getId();
+        this.phoneNumber = user.getPhoneNumber();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.rut = user.getRut();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.birthDate = user.getBirthDate();
+    }
 
     public Usuario toUser() {
         Usuario user = new Usuario();
@@ -40,6 +50,18 @@ public class UsuarioDTO {
         user.setPhoneNumber(phoneNumber);
         user.setBirthDate(birthDate);
         return user;
+    }
+
+    public UsuarioDTO(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
+
+    public UsuarioDTO (Long id, String firstName, String lastName, String email){
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     @Schema(description = "Identificador único del usuario", example = "1")
@@ -68,16 +90,4 @@ public class UsuarioDTO {
 
     @Schema(description = "Fecha de nacimiento del usuario", example = "1990-01-01")
     private Date birthDate;
-
-    public UsuarioDTO(String email, String password){
-        this.email = email;
-        this.password = password;
-    }
-
-    public UsuarioDTO (Long id, String firstName, String lastName, String email){
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
 }

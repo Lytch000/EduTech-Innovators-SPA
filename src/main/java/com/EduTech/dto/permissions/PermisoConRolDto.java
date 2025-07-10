@@ -19,6 +19,7 @@ import lombok.Data;
 @Data
 @Schema(description = "DTO que representa un permiso junto con los roles asociados")
 public class PermisoConRolDto {
+    public PermisoConRolDto() {}
 
     /**
      * Constructor que transforma una entidad Permiso en un DTO con sus roles asociados.
